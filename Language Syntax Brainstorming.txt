@@ -1,0 +1,53 @@
+Various syntax brainstorming
+
+Curly brackets with multiple lines of statements can be used in place of any expected statement
+Square brackets are used to indicate a list constructor (takes zero or more comma seperated values)
+Functions are both expressions and statements, and can be used as either
+If a function with no return value is used as an expression, an error will be thrown
+Define can be shortened to def
+Function can be shortened to func
+Predicates are any function that takes one argument and returns true or false
+An expression that evaluates to a predicate can always be used before an identifier in a definition to set the type of value that identifier can represent
+No type coercion
+Functions can be recursive
+Identifiers can't be keywords
+Parentheses can be wrapped around expressions
+
+Built-in types:
+- any?
+- number?
+- character?
+- boolean?
+- function?
+- type?
+
+define <identifier>: expression;
+define <predicate_identifier> <identifier>: <expression>;
+
+define identifier: function identifier: <statement>;
+define identifier: function [identifier, ...]: <statement>;
+define predicate_identifier <identifier>: function <expression> [<identifier>, ...]: <statement>;
+
+define type? <identifier>: function boolean? <identifier>: return: <expression>;
+
+function_identifier: expression;
+function_identifier: [expression, ...];
+
+return: expression;
+return predicate_identifier: expression;
+
+if expression: statement;
+if expression: {
+	statement;
+	statement;
+	...
+};
+
+if expression: statement;
+else: statement;
+
+if expression: statement;
+else if expression: statement;
+else: statement;
+
+while expression: statement;

@@ -1,0 +1,172 @@
+<program> is the start of the file
+<identifier> is any string of characters that is not a keyword and does not contain spaces
+<character> is any single character
+<number> is any integer or float
+Any whitespace in this grammar could be either a space or a newline
+
+<program> -->
+	<multiple-statements>
+
+<multiple-statements> -->
+	<statement>
+	<statement> <multiple-statements>
+
+<statement> -->
+	{<multiple-statements>}
+	<define> <binding-identifier>: <expression>
+	<execute> <identifier>: <list>
+	<return> <expression>
+	<if-statement>
+	while <expression>: <statement>
+	pass
+
+<if-statement> -->
+	if <expression>: <statement>
+	if <expression>: <statement> <else-if-chain>
+	if <expression>: <statement> else: <statement>
+	if <expression>: <statement> <else-if-chain> else: <statement>
+
+<else-if-chain> -->
+	else if <expression>: <statement>
+	else if <expression>: <statement> <else-if-chain>
+
+<expression> -->
+	(<expression>)
+	<identifier>
+	<numeric-expression>
+	<boolean-expression>
+	'<character>'
+	<list>
+	<evaluate> <identifier>: <list>
+	<function> <list>: <statement>
+	<function> <identifier> <list>: <statement>
+
+<numeric-expression> -->
+	<number>
+	<expression> <numeric-operator> <expression>
+
+<numeric-operator> -->
+	+
+	-
+	/
+	*
+	%
+
+<boolean-expression> -->
+	true
+	false
+	!<expression>
+	<expression> = <expression>
+	<expression> | <expression>
+	<expression> & <expression>
+
+<list> -->
+	[]
+	[<expression>]
+	[<expression>, <more-expressions>]
+
+<more-expressions> -->
+	<expression>
+	<expression>, <more-expressions>
+
+<binding-identifier> -->
+	<identifier>
+	<identifier> <identifier>
+
+<define> -->
+	define
+	def
+
+<execute> -->
+	execute
+	exe
+
+<evaluate> -->
+	evaluate
+	evl
+
+<function> -->
+	function
+	fnc
+
+<return> -->
+	return
+	rtn
+
+Examples:
+
+Basic variable declaration
+	<program>
+--> <multiple-statements>
+--> <statement>
+--> <define> <binding-identifier>: <expression>
+--> def <binding-identifier>: <expression>
+--> def <identifier>: <expression>
+--> def x: <expression>
+--> def x: <numeric-expression>
+--> def x: 5
+
+Variable type definition
+	<program>
+--> <multiple-statements>
+--> <statement>
+--> <define> <binding-identifier>: <expression>
+--> def <binding-identifier>: <expression>
+--> def <identifier> <identifier>: <expression>
+--> def number? <identifier>: <expression>
+--> def number? x: <expression>
+--> def number? x: <numeric-expression>
+--> def number? x: 5
+
+Function declaration
+	<program>
+--> <multiple-statements>
+--> <statement>
+--> <define> <binding-identifier>: <expression>
+--> def <binding-identifier>: <expression>
+--> def <identifier>: <expression>
+--> def foo: <expression>
+--> def foo: <function> <list>: <statement>
+--> def foo: fnc <list>: <statement>
+--> def foo: fnc []: <statement>
+--> def foo: fnc []: <return> <expression>
+--> def foo: fnc []: rtn <expression>
+--> def foo: fnc []: rtn <numeric-expression>
+--> def foo: fnc []: rtn 5
+
+Declare variable from function
+	<program>
+--> <multiple-statements>
+--> <statement> <multiple-statements>
+--> <define> <binding-identifier>: <expression> <multiple-statements>
+--> def <binding-identifier>: <expression> <multiple-statements>
+--> def <identifier>: <expression> <multiple-statements>
+--> def foo: <expression> <multiple-statements>
+--> def foo: <function> <list>: <statement> <multiple-statements>
+--> def foo: fnc <list>: <statement> <multiple-statements>
+--> def foo: fnc []: <statement> <multiple-statements>
+--> def foo: fnc []: <return> <expression> <multiple-statements>
+--> def foo: fnc []: rtn <expression> <multiple-statements>
+--> def foo: fnc []: rtn 5 <multiple-statements>
+--> def foo: fnc []: rtn 5 <statement>
+--> def foo: fnc []: rtn 5 <define> <binding-identifier>: <expression>
+--> def foo: fnc []: rtn 5 def <binding-identifier>: <expression>
+--> def foo: fnc []: rtn 5 def x: <expression>
+--> def foo: fnc []: rtn 5 def x: <evaluate> <identifier>: <list>
+--> def foo: fnc []: rtn 5 def x: evl <identifier>: <list>
+--> def foo: fnc []: rtn 5 def x: evl foo: <list>
+--> def foo: fnc []: rtn 5 def x: evl foo: []
+
+Simple if statement
+	<program>
+--> <multiple-statements>
+--> <statement>
+--> <if-statement>
+--> if <expression>: <statement>
+--> if <boolean-expression>: <statement>
+--> if true: <statement>
+--> if true: <define> <binding-identifier>: <expression>
+--> if true: def <binding-identifier>: <expression>
+--> if true: def x: <expression>
+--> if true: def x: <numeric-expression>
+--> if true: def x: 5
