@@ -6,21 +6,31 @@
 * myNumber3: type: INT, data: 5
 * myNumber4: type: INT, data: 53
 * myNumber5: type: DOUBLE, data: 0.0
-* myNumber5: type: DOUBLE, data: 2.5
-* myNumber5: type: DOUBLE, data: 10.7
+* myNumber6: type: DOUBLE, data: 2.5
+* myNumber7: type: DOUBLE, data: 10.7
 */
 
-typedef union numberUnion{
+typedef union numberUnion {
     int integer;
     double decimal;
 } numberUnion;
 
-typedef enum numberUnionFlag {
-    INT,
-    DOUBLE
-} numberUnionFlag;
+enum numberUnionFlag {INT, DOUBLE};
 
 typedef struct numberData {
+    enum numberUnionFlag type;
     numberUnion data;
-    numberUnionFlag type;
 } numberData;
+
+// Parse tree types
+
+typedef struct rootNode {
+    multipleStatementsNode *value;
+} programNode;
+
+enum multStmntFlag {MULTI, SINGLE};
+
+typedef struct multipleStatementsNode {
+    enum multStmntFlag flag;
+    statement *value;
+} multipleStatementsNode;
