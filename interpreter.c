@@ -2,35 +2,49 @@
 * Number data type. Uses a union to handle both integers and doubles.
 * 
 * Examples
-* myNumber1: type: INT, data: 0
-* myNumber3: type: INT, data: 5
-* myNumber4: type: INT, data: 53
-* myNumber5: type: DOUBLE, data: 0.0
-* myNumber6: type: DOUBLE, data: 2.5
-* myNumber7: type: DOUBLE, data: 10.7
+* myNumber1: type: INT, integer: 1
+* myNumber3: type: INT, integer: 5
+* myNumber4: type: INT, integer: 53
+* myNumber5: type: DOUBLE, decimal: 0.0
+* myNumber6: type: DOUBLE, decimal: 2.5
+* myNumber7: type: DOUBLE, decimal: 10.7
 */
-
-typedef union numberUnion {
-    int integer;
-    double decimal;
-} numberUnion;
 
 enum numberUnionFlag {INT, DOUBLE};
 
-typedef struct numberData {
+typedef struct {
     enum numberUnionFlag type;
-    numberUnion data;
+    union {
+        int integer;
+        double decimal;
+    };
+    
 } numberData;
 
 // Parse tree types
 
-typedef struct rootNode {
+typedef struct{
     multipleStatementsNode *value;
 } programNode;
 
 enum multStmntFlag {MULTI, SINGLE};
 
-typedef struct multipleStatementsNode {
+typedef struct {
     enum multStmntFlag flag;
-    statement *value;
+    union {
+        statementNode *single;
+        struct {
+            statementNode *first;
+            multipleStatementsNode *rest;
+        };
+    };
 } multipleStatementsNode;
+
+enum stmntFlag {BLOCK, DEFINE, EXECUTE, RETURN, IF, WHILE, PASS};
+
+typedef struct {
+    enum stmntFlag flag;
+    union {
+        
+    };
+} statementNode;
