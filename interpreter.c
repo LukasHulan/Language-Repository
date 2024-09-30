@@ -24,7 +24,7 @@ typedef struct {
 // Parse tree types
 
 typedef struct{
-    multipleStatementsNode *value;
+    multipleStatementsNode* value;
 } programNode;
 
 enum multStmntFlag {MULTI, SINGLE};
@@ -32,10 +32,10 @@ enum multStmntFlag {MULTI, SINGLE};
 typedef struct {
     enum multStmntFlag flag;
     union {
-        statementNode *single;
+        statementNode* single;
         struct {
-            statementNode *first;
-            multipleStatementsNode *rest;
+            statementNode* first;
+            multipleStatementsNode* rest;
         };
     };
 } multipleStatementsNode;
@@ -45,6 +45,25 @@ enum stmntFlag {BLOCK, DEFINE, EXECUTE, RETURN, IF, WHILE, PASS};
 typedef struct {
     enum stmntFlag flag;
     union {
-        
+        multipleStatementsNode* block;
+        struct {
+            defineNode* def;
+            bindingIdentifierNode* bid;
+            expressionNode* expr;
+        };
+        struct {
+            executeNode* exe;
+            identifierNode* id;
+            listNode* list;
+        };
+        struct {
+            returnNode* rtn;
+            expressionNode* expr;
+        };
+        ifNode* ifStmnt;
+        struct {
+            expressionNode* expr;
+            statementNode* stmnt;
+        };
     };
 } statementNode;
