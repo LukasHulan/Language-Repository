@@ -21,9 +21,9 @@ typedef struct numberData_s {
 } numberData_s;
 
 // Parse tree types
-typedef struct program {
+typedef struct program_s {
     struct multipleStatements_s* stmnts;
-} program;
+} program_s;
 
 enum multiTag {SINGLE, MULTI};
 
@@ -167,6 +167,7 @@ typedef struct expression_s {
 } expression_s;
 
 enum numTag {NUMBER, NUMERIC_OPERATOR};
+enum operator {ADD, SUBTRACT, MULTIPLY, DIVIDE};
 
 typedef struct numeric_s {
     enum numTag tag;
@@ -176,7 +177,9 @@ typedef struct numeric_s {
         } NUMBER;
 
         struct {
-            int placeholder;
+            struct numberData_s* num1;
+            struct numberData_s* num2;
+            enum operator op;
         } NUMERIC_OPERATOR;
     }; 
 } numeric_s;
@@ -285,5 +288,50 @@ typedef struct identifier_s {
 } identifier_s;
 
 int main() {
+    // "define x: 5"
+    identifier_s defStmntId;
+    defStmntId.identifier = "x";
+    bindingIdentifier_s defStmntBid;
+    defStmntBid.tag = NOT_TYPED;
+    defStmntBid.NOT_TYPED.id = &defStmntId;
+    numberData_s fiveInt;
+    fiveInt.type = INT;
+    fiveInt.integer = 5;
+    numeric_s numFive;
+    numFive.tag = NUMBER;
+    numFive.NUMBER.num = &fiveInt;
+    expression_s numExpr;
+    numExpr.tag = NUMERIC;
+    numExpr.NUMERIC.num = &numFive;
+    statement_s defStmnt;
+    defStmnt.tag = DEFINE;
+    defStmnt.DEFINE.bid = &defStmntBid;
+    defStmnt.DEFINE.expr = &numExpr;
+    multipleStatements_s defMultStmnt;
+    defMultStmnt.tag = SINGLE;
+    defMultStmnt.SINGLE.stmnt = &defStmnt;
+    program_s defStmntRoot;
+    defStmntRoot.stmnts = &defMultStmnt;
+
+    // "if true: def x: 5"
+    boolean_s boolTrue;
+    boolTrue.tag = TRUE;
+    boolTrue.TRUE.placeholder = 1;
+    expression_s boolExpr;
+    boolExpr.tag = BOOLEAN;
+    boolExpr.BOOLEAN.bool = &boolTrue;
+    if_s ifCond;
+    ifCond.tag = IF_ONLY;
+    ifCond.IF_ONLY.ifExpr = &boolExpr;
+    ifCond.IF_ONLY.ifStmnt = &defStmnt;
+    statement_s ifStmnt;
+    ifStmnt.tag = IF;
+    ifStmnt.IF.stmnt = &ifCond;
+    multipleStatements_s ifMultStmnt;
+    ifMultStmnt.tag = SINGLE;
+    ifMultStmnt.SINGLE.stmnt = &ifStmnt;
+    program_s ifStmntRoot;
+    ifStmntRoot.stmnts = &ifMultStmnt;
+
     return 0;
 }
