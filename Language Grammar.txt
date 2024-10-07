@@ -38,8 +38,7 @@ Any whitespace in this grammar could be either a space or a newline
 	'<character>'
 	<list>
 	<evaluate> <identifier>: <list>
-	<function> <list>: <statement>
-	<function> <identifier> <list>: <statement>
+	<function-declaration>
 
 <numeric-expression> -->
 	<number>
@@ -62,12 +61,15 @@ Any whitespace in this grammar could be either a space or a newline
 
 <list> -->
 	[]
-	[<expression>]
-	[<expression>, <more-expressions>]
+	[<multiple-expressions>]
 
-<more-expressions> -->
+<multiple-expressions> -->
 	<expression>
-	<expression>, <more-expressions>
+	<expression>, <multiple-expressions>
+
+<function-declaration> -->
+	<function> <list>: <statement>
+	<function> <identifier> <list>: <statement>
 
 <binding-identifier> -->
 	<identifier>
