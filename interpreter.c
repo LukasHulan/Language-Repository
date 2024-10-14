@@ -546,6 +546,91 @@ char* elseIfChainRepr(elseIfChain_s* param) {
     return returnStr;
 }
 
+char* expressionRepr(expression_s* param) {
+    char* tagName;
+    int returnLength;
+    char* returnStr;
+
+    if (param->tag == PARENTHESES) {
+        tagName = "parentheses";
+
+        char* exprStr = expressionRepr(param->parentheses_t.expr);
+
+        returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(exprStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", exprStr, "]");
+    } else if (param->tag == IDENTIFIER) {
+        tagName = "identifier";
+
+        char* idStr = identifierRepr(param->identifier_t.id);
+
+        returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(idStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", idStr, "]");
+    } else if (param->tag == NUMERIC) {
+        tagName = "numeric";
+
+        char* numStr = numericRepr(param->numeric_t.num);
+
+        returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(numStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", numStr, "]");
+    } else if (param->tag == BOOLEAN) {
+        tagName = "boolean";
+
+        char* boolStr = booleanRepr(param->boolean_t.bool);
+
+        returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(boolStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", boolStr, "]");
+    } else if (param->tag == CHARACTER) {
+        tagName = "character";
+
+        char* chrStr = characterRepr(param->character_t.chr);
+
+        returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(chrStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", chrStr, "]");
+    } else if (param->tag == LIST) {
+        tagName = "list";
+
+        char* listStr = listRepr(param->list_t.list);
+
+        returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(listStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", listStr, "]");
+    } else if (param->tag == EVALUATE) {
+        tagName = "evaluate";
+
+        char* idStr = identifierRepr(param->evaluate_t.id);
+        char* listStr = listRepr(param->evaluate_t.list);
+
+        returnLength = strlen("Expression(): [, ]") + strlen(tagName) + strlen(idStr) + strlen(listStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "Expression(", tagName, "): [", idStr, ", ", listStr, "]");
+    } else if (param->tag == FUNCTION) {
+        tagName = "function";
+
+        char* funcStr = functionDeclarationRepr(param->function_t.func);
+
+        returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(funcStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", funcStr, "]");
+    } else {
+        return "Error: invalid or unset tag.";
+    }
+
+    return returnStr;
+}
+
 int main() {
     // "define x: 5"
     identifier_s* defStmntId = malloc(sizeof(identifier_s));
