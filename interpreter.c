@@ -394,7 +394,7 @@ char* statementRepr(statement_s* param) {
         char* bidStr = bindingIdentifierRepr(param->define_t.bid);
         char* exprStr = expressionRepr(param->define_t.expr);
 
-        returnLength = strlen("Statement(): []") + strlen(tagName) + strlen(bidStr) + strlen(exprStr) + 1;
+        returnLength = strlen("Statement(): [, ]") + strlen(tagName) + strlen(bidStr) + strlen(exprStr) + 1;
         returnStr = malloc(returnLength);
 
         snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "Statement(", tagName, "): [", bidStr, ", ", exprStr, "]");
@@ -404,7 +404,7 @@ char* statementRepr(statement_s* param) {
         char* idStr = identifierRepr(param->execute_t.id);
         char* listStr = listRepr(param->execute_t.list);
 
-        returnLength = strlen("Statement(): []") + strlen(tagName) + strlen(idStr) + strlen(listStr) + 1;
+        returnLength = strlen("Statement(): [, ]") + strlen(tagName) + strlen(idStr) + strlen(listStr) + 1;
         returnStr = malloc(returnLength);
 
         snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "Statement(", tagName, "): [", idStr, ", ", listStr, "]");
@@ -432,7 +432,7 @@ char* statementRepr(statement_s* param) {
         char* exprStr = expressionRepr(param->while_t.expr);
         char* stmntStr = statementRepr(param->while_t.stmnt);
 
-        returnLength = strlen("Statement(): []") + strlen(tagName) + strlen(exprStr) + strlen(stmntStr) + 1;
+        returnLength = strlen("Statement(): [, ]") + strlen(tagName) + strlen(exprStr) + strlen(stmntStr) + 1;
         returnStr = malloc(returnLength);
 
         snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "Statement(", tagName, "): [", exprStr, ", ", stmntStr, "]");
@@ -442,6 +442,103 @@ char* statementRepr(statement_s* param) {
         returnStr = malloc(returnLength);
 
         snprintf(returnStr, returnLength, "%s", "Statement(", tagName, ")");
+    } else {
+        return "Error: invalid or unset tag.";
+    }
+
+    return returnStr;
+}
+
+char* ifRepr(if_s* param) {
+    char* tagName;
+    int returnLength;
+    char* returnStr;
+
+    if (param->tag == IF_ONLY) {
+        tagName = "if_only";
+
+        char* exprStr = expressionRepr(param->if_only_t.ifExpr);
+        char* stmntStr = statementRepr(param->if_only_t.ifStmnt);
+
+        returnLength = strlen("If(): [, ]") + strlen(tagName) + strlen(exprStr) + strlen(stmntStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "If(", tagName, "): [", exprStr, ", ", stmntStr, "]");
+    } else if (param->tag == IF_ELSE) {
+        tagName = "if_else";
+
+        char* ifExprStr = expressionRepr(param->if_else_t.ifExpr);
+        char* ifStmntStr = statementRepr(param->if_else_t.ifStmnt);
+        char* elseStmntStr = statementRepr(param->if_else_t.elseStmnt);
+
+        returnLength = strlen("If(): [, , ]") + strlen(tagName)
+                     + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(elseStmntStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s%s%s",
+                 "If(", tagName, "): [", ifExprStr, ", ", ifStmntStr, ", ", elseStmntStr, "]");
+    } else if (param->tag == IF_ELSEIF) {
+        tagName = "if_elseif";
+
+        char* ifExprStr = expressionRepr(param->if_elseif_t.ifExpr);
+        char* ifStmntStr = statementRepr(param->if_elseif_t.ifStmnt);
+        char* chainStr = statementRepr(param->if_elseif_t.chain);
+
+        returnLength = strlen("If(): [, , ]") + strlen(tagName)
+                     + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(chainStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s%s%S",
+                 "If(", tagName, "): [", ifExprStr, ", ", ifStmntStr, ", ", chainStr, "]");
+    } else if (param->tag == IF_ELSEIF_ELSE) {
+        tagName = "if_elseif_else";
+
+        char* ifExprStr = expressionRepr(param->if_elseif_t.ifExpr);
+        char* ifStmntStr = statementRepr(param->if_elseif_t.ifStmnt);
+        char* chainStr = statementRepr(param->if_elseif_t.chain);
+        char* elseStmntStr = statementRepr(param->if_else_t.elseStmnt);
+
+        returnLength = strlen("If(): [, , , ]") + strlen(tagName)
+                     + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(chainStr) + strlen(elseStmntStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s%s%s",
+                 "If(", tagName, "): [", ifExprStr, ", ", ifStmntStr, ", ", chainStr, ", ", elseStmntStr, "]");
+    } else {
+        return "Error: invalid or unset tag.";
+    }
+
+    return returnStr;
+}
+
+char* elseIfChainRepr(elseIfChain_s* param) {
+    char* tagName;
+    int returnLength;
+    char* returnStr;
+
+    if (param->tag == SINGLE) {
+        tagName = "single";
+
+        char* exprStr = expressionRepr(param->single_t.ifExpr);
+        char* stmntStr = statementRepr(param->single_t.ifStmnt);
+
+        returnLength = strlen("ElseIfChain(): [, ]") + strlen(tagName) + strlen(exprStr) + strlen(stmntStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "ElseIfChain(", tagName, "): [", exprStr, ", ", stmntStr, "]");
+    } else if (param->tag == MULTI) {
+        tagName = "multi";
+
+        char* ifExprStr = expressionRepr(param->multi_t.ifExpr);
+        char* ifStmntStr = statementRepr(param->multi_t.ifStmnt);
+        char* chainStr = statementRepr(param->multi_t.chain);
+
+        returnLength = strlen("ElseIfChain(): [, , ]") + strlen(tagName)
+                     + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(chainStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s%s%s",
+                 "ElseIfChain(", tagName, "): [", ifExprStr, ", ", ifStmntStr, ", ", chainStr, "]");
     } else {
         return "Error: invalid or unset tag.";
     }
@@ -501,7 +598,7 @@ int main() {
     passStmnt->tag = PASS;
     passStmnt->pass_t.placeholder = 1;
 
-    printf("%s", statementRepr(passStmnt));
+    // printf("%s", statementRepr(passStmnt));
 
     return 0;
 }
