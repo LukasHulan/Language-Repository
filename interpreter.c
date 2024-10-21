@@ -310,27 +310,34 @@ char* identifierRepr(identifier_s* param);
 
 // Representation functions
 char* numberDataRepr(numberData_s* param) {
+    char* typeName;
     int paramlength;
     char* paramStr;
     int returnLength;
     char* returnStr;
 
     if (param->type == INT) {
+        typeName = "integer";
+
         paramlength = snprintf(NULL, 0, "%d", param->integer) + 1;
         paramStr = malloc(paramlength);
+
         snprintf(paramStr, paramlength, "%d", param->integer);
     } else if (param->type == DOUBLE) {
+        typeName = "double";
+
         paramlength = snprintf(NULL, 0, "%lf", param->decimal) + 1;
         paramStr = malloc(paramlength);
+        
         snprintf(paramStr, paramlength, "%lf", param->decimal);
     } else {
-        return "Error: invalid or unset tag.";
+        return "Error: invalid or unset tag";
     }
 
-    returnLength = strlen("NumberData: []") + paramlength;
+    returnLength = strlen("NumberData(): []") + paramlength;
     returnStr = malloc(returnLength);
 
-    snprintf(returnStr, returnLength, "%s%s%s", "NumberData: [", paramStr, "]");
+    snprintf(returnStr, returnLength, "NumberData(%s): [%s]", typeName, paramStr);
     return returnStr;
 }
 
@@ -339,7 +346,7 @@ char* programRepr(program_s* param) {
     int returnLength = strlen("Program: []") + strlen(multStmntStr) + 1;
     char* returnStr = malloc(returnLength);
 
-    snprintf(returnStr, returnLength, "%s%s%s", "Program: [", multStmntStr, "]");
+    snprintf(returnStr, returnLength, "Program: [%s]", multStmntStr);
     return returnStr;
 }
 
@@ -356,7 +363,7 @@ char* multipleStatementsRepr(multipleStatements_s* param) {
         returnLength = strlen("MultipleStatements(): []") + strlen(tagName) + strlen(stmntStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "MultipleStatements(", tagName, "): [", stmntStr, "]");
+        snprintf(returnStr, returnLength, "MultipleStatements(%s): [%s]", tagName, stmntStr);
     } else if (param->tag == MULTI) {
         tagName = "multi";
 
@@ -366,9 +373,9 @@ char* multipleStatementsRepr(multipleStatements_s* param) {
         returnLength = strlen("MultipleStatements(): [, ]") + strlen(tagName) + strlen(firstStr) + strlen(restStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "MultipleStatements(", tagName, "): [", firstStr, ", ", restStr, "]");
+        snprintf(returnStr, returnLength, "MultipleStatements(%s): [%s, %s]", tagName, firstStr, restStr);
     } else {
-        return "Error: invalid or unset tag.";
+        return "Error: invalid or unset tag";
     }
 
     return returnStr;
@@ -387,7 +394,7 @@ char* statementRepr(statement_s* param) {
         returnLength = strlen("Statement(): []") + strlen(tagName) + strlen(multStmntStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Statement(", tagName, "): [", multStmntStr, "]");
+        snprintf(returnStr, returnLength, "Statement(%s): [%s]", tagName, multStmntStr);
     } else if (param->tag == DEFINE) {
         tagName = "define";
 
@@ -397,7 +404,7 @@ char* statementRepr(statement_s* param) {
         returnLength = strlen("Statement(): [, ]") + strlen(tagName) + strlen(bidStr) + strlen(exprStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "Statement(", tagName, "): [", bidStr, ", ", exprStr, "]");
+        snprintf(returnStr, returnLength, "Statement(%s): [%s, %s]", tagName, bidStr, exprStr);
     } else if (param->tag == EXECUTE) {
         tagName = "execute";
 
@@ -407,7 +414,7 @@ char* statementRepr(statement_s* param) {
         returnLength = strlen("Statement(): [, ]") + strlen(tagName) + strlen(idStr) + strlen(listStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "Statement(", tagName, "): [", idStr, ", ", listStr, "]");
+        snprintf(returnStr, returnLength, "Statement(%s): [%s, %s]", tagName, idStr, listStr);
     } else if (param->tag == RETURN) {
         tagName = "return";
 
@@ -416,7 +423,7 @@ char* statementRepr(statement_s* param) {
         returnLength = strlen("Statement(): []") + strlen(tagName) + strlen(exprStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Statement(", tagName, "): [", exprStr, "]");
+        snprintf(returnStr, returnLength, "Statement(%s): [%s]", tagName, exprStr);
     } else if (param->tag == IF) {
         tagName = "if";
 
@@ -425,7 +432,7 @@ char* statementRepr(statement_s* param) {
         returnLength = strlen("Statement(): []") + strlen(tagName) + strlen(ifStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Statement(", tagName, "): [", ifStr, "]");
+        snprintf(returnStr, returnLength, "Statement(%s): [%s]", tagName, ifStr);
     } else if (param->tag == WHILE) {
         tagName = "while";
         
@@ -435,15 +442,15 @@ char* statementRepr(statement_s* param) {
         returnLength = strlen("Statement(): [, ]") + strlen(tagName) + strlen(exprStr) + strlen(stmntStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "Statement(", tagName, "): [", exprStr, ", ", stmntStr, "]");
+        snprintf(returnStr, returnLength, "Statement(%s): [%s, %s]", tagName, exprStr, stmntStr);
     } else if (param->tag == PASS) {
         tagName = "pass";
         returnLength = strlen("Statement()") + strlen(tagName) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s", "Statement(", tagName, ")");
+        snprintf(returnStr, returnLength, "Statement(%s)", tagName);
     } else {
-        return "Error: invalid or unset tag.";
+        return "Error: invalid or unset tag";
     }
 
     return returnStr;
@@ -463,7 +470,7 @@ char* ifRepr(if_s* param) {
         returnLength = strlen("If(): [, ]") + strlen(tagName) + strlen(exprStr) + strlen(stmntStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "If(", tagName, "): [", exprStr, ", ", stmntStr, "]");
+        snprintf(returnStr, returnLength, "If(%s): [%s, %s]", tagName, exprStr, stmntStr);
     } else if (param->tag == IF_ELSE) {
         tagName = "if_else";
 
@@ -475,8 +482,7 @@ char* ifRepr(if_s* param) {
                      + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(elseStmntStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s%s%s",
-                 "If(", tagName, "): [", ifExprStr, ", ", ifStmntStr, ", ", elseStmntStr, "]");
+        snprintf(returnStr, returnLength, "If(%s): [%s, %s, %s]", tagName, ifExprStr, ifStmntStr, elseStmntStr);
     } else if (param->tag == IF_ELSEIF) {
         tagName = "if_elseif";
 
@@ -488,8 +494,7 @@ char* ifRepr(if_s* param) {
                      + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(chainStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s%s%S",
-                 "If(", tagName, "): [", ifExprStr, ", ", ifStmntStr, ", ", chainStr, "]");
+        snprintf(returnStr, returnLength, "If(%s): [%s, %s, %s]", tagName, ifExprStr, ifStmntStr, chainStr);
     } else if (param->tag == IF_ELSEIF_ELSE) {
         tagName = "if_elseif_else";
 
@@ -502,10 +507,9 @@ char* ifRepr(if_s* param) {
                      + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(chainStr) + strlen(elseStmntStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s%s%s",
-                 "If(", tagName, "): [", ifExprStr, ", ", ifStmntStr, ", ", chainStr, ", ", elseStmntStr, "]");
+        snprintf(returnStr, returnLength, "If(%s): [%s, %s, %s, %s]", tagName, ifExprStr, ifStmntStr, chainStr, elseStmntStr);
     } else {
-        return "Error: invalid or unset tag.";
+        return "Error: invalid or unset tag";
     }
 
     return returnStr;
@@ -525,7 +529,7 @@ char* elseIfChainRepr(elseIfChain_s* param) {
         returnLength = strlen("ElseIfChain(): [, ]") + strlen(tagName) + strlen(exprStr) + strlen(stmntStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "ElseIfChain(", tagName, "): [", exprStr, ", ", stmntStr, "]");
+        snprintf(returnStr, returnLength, "ElseIfChain(%s): [%s, %s]", tagName, exprStr, stmntStr);
     } else if (param->tag == MULTI) {
         tagName = "multi";
 
@@ -537,10 +541,9 @@ char* elseIfChainRepr(elseIfChain_s* param) {
                      + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(chainStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s%s%s",
-                 "ElseIfChain(", tagName, "): [", ifExprStr, ", ", ifStmntStr, ", ", chainStr, "]");
+        snprintf(returnStr, returnLength, "ElseIfChain(%s): [%s, %s, %s]", tagName, ifExprStr, ifStmntStr, chainStr);
     } else {
-        return "Error: invalid or unset tag.";
+        return "Error: invalid or unset tag";
     }
 
     return returnStr;
@@ -559,7 +562,7 @@ char* expressionRepr(expression_s* param) {
         returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(exprStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", exprStr, "]");
+        snprintf(returnStr, returnLength, "Expression(%s): [%s]", tagName, exprStr);
     } else if (param->tag == IDENTIFIER) {
         tagName = "identifier";
 
@@ -568,7 +571,7 @@ char* expressionRepr(expression_s* param) {
         returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(idStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", idStr, "]");
+        snprintf(returnStr, returnLength, "Expression(%s): [%s]", tagName, idStr);
     } else if (param->tag == NUMERIC) {
         tagName = "numeric";
 
@@ -577,7 +580,7 @@ char* expressionRepr(expression_s* param) {
         returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(numStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", numStr, "]");
+        snprintf(returnStr, returnLength, "Expression(%s): [%s]", tagName, numStr);
     } else if (param->tag == BOOLEAN) {
         tagName = "boolean";
 
@@ -586,7 +589,7 @@ char* expressionRepr(expression_s* param) {
         returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(boolStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", boolStr, "]");
+        snprintf(returnStr, returnLength, "Expression(%s): [%s]", tagName, boolStr);
     } else if (param->tag == CHARACTER) {
         tagName = "character";
 
@@ -595,7 +598,7 @@ char* expressionRepr(expression_s* param) {
         returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(chrStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", chrStr, "]");
+        snprintf(returnStr, returnLength, "Expression(%s): [%s]", tagName, chrStr);
     } else if (param->tag == LIST) {
         tagName = "list";
 
@@ -604,7 +607,7 @@ char* expressionRepr(expression_s* param) {
         returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(listStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", listStr, "]");
+        snprintf(returnStr, returnLength, "Expression(%s): [%s]", tagName, listStr);
     } else if (param->tag == EVALUATE) {
         tagName = "evaluate";
 
@@ -614,7 +617,7 @@ char* expressionRepr(expression_s* param) {
         returnLength = strlen("Expression(): [, ]") + strlen(tagName) + strlen(idStr) + strlen(listStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s%s%s", "Expression(", tagName, "): [", idStr, ", ", listStr, "]");
+        snprintf(returnStr, returnLength, "Expression(%s): [%s, %s]", tagName, idStr, listStr);
     } else if (param->tag == FUNCTION) {
         tagName = "function";
 
@@ -623,12 +626,244 @@ char* expressionRepr(expression_s* param) {
         returnLength = strlen("Expression(): []") + strlen(tagName) + strlen(funcStr) + 1;
         returnStr = malloc(returnLength);
 
-        snprintf(returnStr, returnLength, "%s%s%s%s%s", "Expression(", tagName, "): [", funcStr, "]");
+        snprintf(returnStr, returnLength, "Expression(%s): [%s]", tagName, funcStr);
     } else {
-        return "Error: invalid or unset tag.";
+        return "Error: invalid or unset tag";
     }
 
     return returnStr;
+}
+
+char* numericRepr(numeric_s* param) {
+    char* tagName;
+    int returnLength;
+    char* returnStr;
+
+    if (param->tag == NUMBER) {
+        tagName = "number";
+
+        char* numStr = numberDataRepr(param->number_t.num);
+
+        returnLength = strlen("Numeric(): []") + strlen(tagName) + strlen(numStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "Numeric(%s): [%s]", tagName, numStr);
+    } else if (param->tag == NUMERIC_OPERATOR) {
+        tagName = "numeric operator";
+
+        char* num1Str = numberDataRepr(param->numeric_operator_t.num1);
+        char* num2Str = numberDataRepr(param->numeric_operator_t.num2);
+
+        char* opStr;
+        switch (param->numeric_operator_t.op) {
+            case ADD:
+                opStr = "Add";
+                break;
+            case SUBTRACT:
+                opStr = "Subtract";
+                break;
+            case MULTIPLY:
+                opStr = "Multiply";
+                break;
+            case DIVIDE:
+                opStr = "Divide";
+                break;
+            default:
+                opStr = "Error: invalid or unset operator";
+        };
+
+        returnLength = strlen("NumericOperator(): [, ]") + strlen(tagName) + strlen(num1Str) + strlen(num2Str) + strlen(opStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "NumericOperator(%s): [%s, %s, %s]", tagName, num1Str, num2Str, opStr);
+    } else {
+        return "Error: invalid or unset tag";
+    }
+
+    return returnStr;
+}
+
+typedef union parseTreeType_s {
+    numberData_s numberDataValue;
+    program_s programValue;
+    multipleStatements_s multipleStatementsValue;
+    statement_s statementValue;
+    if_s ifValue;
+    elseIfChain_s elseIfChainValue;
+    expression_s expressionValue;
+    numeric_s numericValue;
+    boolean_s booleanValue;
+    list_s listValue;
+    multipleExpressions_s multipleExpressionsValue;
+    functionDeclaration_s functionDeclarationValue;
+    bindingIdentifier_s bindingIdentifierValue;
+    character_s characterValue;
+    identifier_s identifierValue;
+} parseTreeType_s;
+
+enum parseType {
+    NUMBER_DATA,
+    PROGRAM,
+    MULTIPLE_STATEMENTS,
+    STATEMENT,
+    IF,
+    ELSE_IF_CHAIN,
+    EXPRESSION,
+    NUMERIC,
+    BOOLEAN,
+    LIST,
+    MULTIPLE_EXPRESSIONS,
+    FUNCTION_DECLARATION,
+    BINDING_IDENTIFIER,
+    CHARACTER,
+    IDENTIFIER
+};
+
+typedef struct parseTree {
+    enum parseType type;
+    parseTreeType_s* tree;
+} parseTree;
+
+typedef struct parsePair_s {
+    parseTree* first;
+    parseTree* second;
+} parsePair_s;
+
+typedef struct stringPair_s {
+    char* first;
+    char* second;
+} stringPair_s;
+
+// Checks if two parse trees are equal
+int ptcmp(parseTree* first, parseTree* second) {
+    if (first->type != second->type) {
+        return 0;
+    }
+
+    char* firstStr;
+    char* secondStr;
+
+    switch (first->type) {
+        case NUMBER_DATA:
+            firstStr = numberDataRepr(&(first->tree->numberDataValue));
+            secondStr = numberDataRepr(&(second->tree->numberDataValue));
+            break;
+        case PROGRAM:
+            firstStr = programRepr(&(first->tree->programValue));
+            secondStr = programRepr(&(second->tree->programValue));
+            break;
+        case MULTIPLE_STATEMENTS:
+            firstStr = multipleStatementsRepr(&(first->tree->multipleStatementsValue));
+            secondStr = multipleStatementsRepr(&(second->tree->multipleStatementsValue));
+            break;
+        case STATEMENT:
+            firstStr = statementRepr(&(first->tree->statementValue));
+            secondStr = statementRepr(&(second->tree->statementValue));
+            break;
+        case IF:
+            firstStr = ifRepr(&(first->tree->ifValue));
+            secondStr = ifRepr(&(second->tree->ifValue));
+            break;
+        case ELSE_IF_CHAIN:
+            firstStr = elseIfChainRepr(&(first->tree->elseIfChainValue));
+            secondStr = elseIfChainRepr(&(second->tree->elseIfChainValue));
+            break;
+        case EXPRESSION:
+            firstStr = expressionRepr(&(first->tree->expressionValue));
+            secondStr = expressionRepr(&(second->tree->expressionValue));
+            break;
+        case NUMERIC:
+            firstStr = numericRepr(&(first->tree->numericValue));
+            secondStr = numericRepr(&(second->tree->numericValue));
+            break;
+        case BOOLEAN:
+            firstStr = booleanRepr(&(first->tree->booleanValue));
+            secondStr = booleanRepr(&(second->tree->booleanValue));
+            break;
+        case LIST:
+            firstStr = listRepr(&(first->tree->listValue));
+            secondStr = listRepr(&(second->tree->listValue));
+            break;
+        case MULTIPLE_EXPRESSIONS:
+            firstStr = multipleExpressionsRepr(&(first->tree->multipleExpressionsValue));
+            secondStr = multipleExpressionsRepr(&(second->tree->multipleExpressionsValue));
+            break;
+        case FUNCTION_DECLARATION:
+            firstStr = functionDeclarationRepr(&(first->tree->functionDeclarationValue));
+            secondStr = functionDeclarationRepr(&(second->tree->functionDeclarationValue));
+            break;
+        case BINDING_IDENTIFIER:
+            firstStr = bindingIdentifierRepr(&(first->tree->bindingIdentifierValue));
+            secondStr = bindingIdentifierRepr(&(second->tree->bindingIdentifierValue));
+            break;
+        case CHARACTER:
+            firstStr = characterRepr(&(first->tree->characterValue));
+            secondStr = characterRepr(&(second->tree->characterValue));
+            break;
+        case IDENTIFIER:
+            firstStr = identifierRepr(&(first->tree->identifierValue));
+            secondStr = identifierRepr(&(second->tree->identifierValue));
+            break;
+        default:
+            printf("Error: invalid or unset type\n");
+            return 0;
+    }
+
+    return strcmp(firstStr, secondStr);
+}
+
+enum testType {STRINGS, PARSE_TREES};
+
+typedef struct testData {
+    enum testType type;
+    union {
+        parsePair_s* pts;
+        stringPair_s* strs;
+    };
+} testData;
+
+int runTests(testData tests[], int numTests) {
+    int testCounter = 0;
+    int testsFailed = 0;
+
+    printf("Running tests: %d\n", numTests);
+    
+    for (int i = 0; i < numTests; i++) {
+        testCounter++;
+
+        if (tests[i].type == PARSE_TREES) {
+            if (ptcmp(tests[i].pts->first, tests[i].pts->second) == 0) {
+                testsFailed++;
+
+                printf("Test failed: %d\n", testCounter);
+            }
+        } else if (tests[i].type == STRINGS) {
+            if (strcmp(tests[i].strs->first, tests[i].strs->second) == 0) {
+                testsFailed++;
+
+                printf("Test failed: %d\n", testCounter);
+            }
+        } else {
+            testsFailed++;
+
+            printf("Error at test %d: invalid or unset type\n", testCounter);
+        }
+    }
+
+    printf("Tests passed: %d\n", numTests - testsFailed);
+    printf("Tests failed: %d\n", testsFailed);
+
+    return testsFailed > 0;
+}
+
+void unitTesting() {
+    // Declare data for tests
+
+    // Compile array of data to test
+    testData tests[1];
+
+    // Run the tests
+    runTests(tests, 0);
 }
 
 int main() {
