@@ -683,6 +683,71 @@ char* numericRepr(numeric_s* param) {
     return returnStr;
 }
 
+char* booleanRepr(boolean_s* param) {
+    char* tagName;
+    int returnLength;
+    char* returnStr;
+
+    if (param->tag == TRUE) {
+        tagName = "true";
+
+        returnLength = strlen("Boolean()") + strlen(tagName) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "Boolean(%s)", tagName);
+    } else if (param->tag == FALSE) {
+        tagName = "false";
+
+        returnLength = strlen("Boolean()") + strlen(tagName) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "Boolean(%s)", tagName);
+    } else if (param->tag == NOT) {
+        tagName = "not";
+
+        char* exprStr = expressionRepr(param->not_t.expr);
+
+        returnLength = strlen("Boolean(): []") + strlen(tagName) + strlen(exprStr) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "Boolean(%s): [%s]", tagName, exprStr);
+    } else if (param->tag == OR) {
+        tagName = "or";
+
+        char* expr1Str = expressionRepr(param->or_t.expr1);
+        char* expr2Str = expressionRepr(param->or_t.expr2);
+
+        returnLength = strlen("Boolean(): [, ]") + strlen(tagName) + strlen(expr1Str) + strlen(expr2Str) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "Boolean(%s): [%s, %s]", tagName, expr1Str, expr2Str);
+    } else if (param->tag == AND) {
+        tagName = "and";
+
+        char* expr1Str = expressionRepr(param->and_t.expr1);
+        char* expr2Str = expressionRepr(param->and_t.expr2);
+
+        returnLength = strlen("Boolean(): [, ]") + strlen(tagName) + strlen(expr1Str) + strlen(expr2Str) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "Boolean(%s): [%s, %s]", tagName, expr1Str, expr2Str);
+    } else if (param->tag == EQUALS) {
+        tagName = "equals";
+
+        char* expr1Str = expressionRepr(param->equals_t.expr1);
+        char* expr2Str = expressionRepr(param->equals_t.expr2);
+
+        returnLength = strlen("Boolean(): [, ]") + strlen(tagName) + strlen(expr1Str) + strlen(expr2Str) + 1;
+        returnStr = malloc(returnLength);
+
+        snprintf(returnStr, returnLength, "Boolean(%s): [%s, %s]", tagName, expr1Str, expr2Str);
+    } else {
+        return "Error: invalid or unset tag";
+    }
+
+    return returnStr;
+}
+
 typedef union parseTreeType_s {
     numberData_s numberDataValue;
     program_s programValue;
