@@ -35,6 +35,6 @@ char* bindingIdentifierToString(bindingIdentifier_s* param);
 char* characterToString(character_s* param);
 char* identifierToString(identifier_s* param);
 
-char* normalizeWhitespace(char* original, int length);
+char* normalizeWhitespace(char* original);
 
 #endif
