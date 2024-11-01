@@ -60,5 +60,7 @@ int main() {
 
     // printf("%s", statementRepr(passStmnt));
 
+    // unitTesting();
+
     return 0;
 }
