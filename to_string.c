@@ -12,6 +12,8 @@ char* normalizeWhitespace(char* original) {
     for (int i = 0; i < length; i++) {
         if (isspace(original[i])) {
             returnStr[i] = ' ';
+        } else {
+            returnStr[i] = original[i];
         }
     }
 
