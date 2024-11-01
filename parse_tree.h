@@ -270,7 +270,7 @@ typedef struct bindingIdentifier_s {
 } bindingIdentifier_s;
 
 typedef struct character_s {
-    char character;
+    char* character;
 } character_s;
 
 typedef struct identifier_s {

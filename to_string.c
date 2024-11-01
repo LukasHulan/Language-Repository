@@ -443,3 +443,146 @@ char* booleanRepr(boolean_s* param) {
 
     return returnStr;
 }
+
+char* listRepr(list_s* param) {
+    char* tagName;
+    int returnLength;
+    char* returnStr;
+
+    switch (param->tag) {
+        case EMPTY:
+            tagName = "empty";
+            returnLength = strlen("List()") + strlen(tagName) + 1;
+            returnStr = malloc(returnLength);
+
+            snprintf(returnStr, returnLength, "List(%s)", tagName);
+            break;
+        case NOT_EMPTY:
+            tagName = "not empty";
+
+            char* exprs = expressionRepr(param->not_empty_t.exprs);
+
+            returnLength = strlen("List() []") + strlen(tagName) + strlen(exprs) + 1;
+            returnStr = malloc(returnLength);
+
+            snprintf(returnStr, returnLength, "List(%s) [%s]", tagName, exprs);
+            break;
+        default:
+            return "Error: invalid or unset tag";
+    }
+
+    return returnStr;
+}
+
+char* multipleExpressionsRepr(multipleExpressions_s* param) {
+    char* tagName;
+    int returnLength;
+    char* returnStr;
+
+    switch (param->tag) {
+        case SINGLE:
+            tagName = "single";
+
+            char* expr = expressionRepr(param->single_t.expr);
+
+            returnLength = strlen("MultipleExpressions() []") + strlen(tagName) + strlen(expr) + 1;
+            returnStr = malloc(returnLength);
+
+            snprintf(returnStr, returnLength, "MultipleExpressions(%s) [%s]", tagName, expr);
+            break;
+        case MULTI:
+            tagName = "multi";
+
+            char* first = expressionRepr(param->multi_t.first);
+            char* rest = multipleExpressionsRepr(param->multi_t.rest);
+
+            returnLength = strlen("MultipleExpressions() [, ]") + strlen(tagName) + strlen(first) + strlen(rest) + 1;
+            returnStr = malloc(returnLength);
+
+            snprintf(returnStr, returnLength, "MultipleExpressions(%s) [%s, %s]", tagName, first, rest);
+            break;
+        default:
+            return "Error: invalid or unset tag";
+    }
+
+    return returnStr;
+}
+
+char* functionDeclarationRepr(functionDeclaration_s* param) {
+    char* tagName;
+    int returnLength;
+    char* returnStr;
+    
+    switch (param->tag) {
+        case NOT_TYPED:
+            tagName = "not typed";
+
+            char* list = listRepr(param->not_typed_t.list);
+            char* stmnt = statementRepr(param->not_typed_t.stmnt);
+
+            returnLength = strlen("FunctionDeclaration() [, ]") + strlen(tagName) + strlen(list) + strlen(stmnt) + 1;
+            returnStr = malloc(returnLength);
+
+            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s, %s]", tagName, list, stmnt);
+            break;
+        case TYPED:
+            tagName = "typed";
+            
+            char* id = listRepr(param->typed_t.id);
+            char* list = listRepr(param->typed_t.list);
+            char* stmnt = statementRepr(param->typed_t.stmnt);
+
+            returnLength = strlen("FunctionDeclaration() [, , ]") + strlen(tagName) + strlen(id) + strlen(list) + strlen(stmnt) + 1;
+            returnStr = malloc(returnLength);
+
+            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s, %s, %s]", tagName, id, list, stmnt);
+            break;
+        default:
+            return "Error: invalid or unset tag";
+    }
+
+    return returnStr;
+}
+
+
+char* bindingIdentifierRepr(bindingIdentifier_s* param) {
+    char* tagName;
+    int returnLength;
+    char* returnStr;
+
+    switch (param->tag) {
+        case NOT_TYPED:
+            tagName = "not typed";
+
+            char* id = identifierRepr(param->not_typed_t.id);
+
+            returnLength = strlen("FunctionDeclaration() []") + strlen(tagName) + strlen(id) + 1;
+            returnStr = malloc(returnLength);
+
+            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s]", tagName, id);
+            break;
+        case TYPED:
+            tagName = "typed";
+            
+            char* type = identifierRepr(param->typed_t.type);
+            char* id = identifierRepr(param->typed_t.id);
+
+            returnLength = strlen("FunctionDeclaration() [, , ]") + strlen(tagName) + strlen(type) + strlen(id) + 1;
+            returnStr = malloc(returnLength);
+
+            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s, %s]", tagName, type, id);
+            break;
+        default:
+            return "Error: invalid or unset tag";
+    }
+
+    return returnStr;
+}
+
+char* characterRepr(character_s* param) {
+    return param->character;
+}
+
+char* identifierRepr(identifier_s* param) {
+    return param->identifier;
+}
