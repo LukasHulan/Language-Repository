@@ -1,8 +1,24 @@
 #include <stdio.h> 
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include <to_string.h>
+
+char* normalizeWhitespace(char* original) {
+    int length = strlen(original);
+    char* returnStr = malloc(length + 1);
+
+    for (int i = 0; i < length; i++) {
+        if (isspace(original[i])) {
+            returnStr[i] = ' ';
+        }
+    }
+
+    returnStr[length + 1] = '\0';
+
+    return returnStr;
+}
 
 // Representation functions
 char* numberDataRepr(numberData_s* param) {
