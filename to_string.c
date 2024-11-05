@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include <to_string.h>
+#include "to_string.h"
 
 char* normalizeWhitespace(char* original) {
     int length = strlen(original);
@@ -202,7 +202,7 @@ char* ifRepr(if_s* param) {
 
         char* ifExprStr = expressionRepr(param->if_elseif_t.ifExpr);
         char* ifStmntStr = statementRepr(param->if_elseif_t.ifStmnt);
-        char* chainStr = statementRepr(param->if_elseif_t.chain);
+        char* chainStr = elseIfChainRepr(param->if_elseif_t.chain);
 
         returnLength = strlen("If(): [, , ]") + strlen(tagName)
                      + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(chainStr) + 1;
@@ -214,7 +214,7 @@ char* ifRepr(if_s* param) {
 
         char* ifExprStr = expressionRepr(param->if_elseif_t.ifExpr);
         char* ifStmntStr = statementRepr(param->if_elseif_t.ifStmnt);
-        char* chainStr = statementRepr(param->if_elseif_t.chain);
+        char* chainStr = elseIfChainRepr(param->if_elseif_t.chain);
         char* elseStmntStr = statementRepr(param->if_else_t.elseStmnt);
 
         returnLength = strlen("If(): [, , , ]") + strlen(tagName)
@@ -249,7 +249,7 @@ char* elseIfChainRepr(elseIfChain_s* param) {
 
         char* ifExprStr = expressionRepr(param->multi_t.ifExpr);
         char* ifStmntStr = statementRepr(param->multi_t.ifStmnt);
-        char* chainStr = statementRepr(param->multi_t.chain);
+        char* chainStr = elseIfChainRepr(param->multi_t.chain);
 
         returnLength = strlen("ElseIfChain(): [, , ]") + strlen(tagName)
                      + strlen(ifExprStr) + strlen(ifStmntStr) + strlen(chainStr) + 1;
@@ -478,7 +478,7 @@ char* listRepr(list_s* param) {
         case NOT_EMPTY:
             tagName = "not empty";
 
-            char* exprs = expressionRepr(param->not_empty_t.exprs);
+            char* exprs = multipleExpressionsRepr(param->not_empty_t.exprs);
 
             returnLength = strlen("List() []") + strlen(tagName) + strlen(exprs) + 1;
             returnStr = malloc(returnLength);
@@ -546,14 +546,14 @@ char* functionDeclarationRepr(functionDeclaration_s* param) {
         case TYPED:
             tagName = "typed";
             
-            char* id = listRepr(param->typed_t.id);
-            char* list = listRepr(param->typed_t.list);
-            char* stmnt = statementRepr(param->typed_t.stmnt);
+            char* id = identifierRepr(param->typed_t.id);
+            char* list_ = listRepr(param->typed_t.list);
+            char* stmnt_ = statementRepr(param->typed_t.stmnt);
 
-            returnLength = strlen("FunctionDeclaration() [, , ]") + strlen(tagName) + strlen(id) + strlen(list) + strlen(stmnt) + 1;
+            returnLength = strlen("FunctionDeclaration() [, , ]") + strlen(tagName) + strlen(id) + strlen(list_) + strlen(stmnt_) + 1;
             returnStr = malloc(returnLength);
 
-            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s, %s, %s]", tagName, id, list, stmnt);
+            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s, %s, %s]", tagName, id, list_, stmnt_);
             break;
         default:
             return "Error: invalid or unset tag";
@@ -583,12 +583,12 @@ char* bindingIdentifierRepr(bindingIdentifier_s* param) {
             tagName = "typed";
             
             char* type = identifierRepr(param->typed_t.type);
-            char* id = identifierRepr(param->typed_t.id);
+            char* id_ = identifierRepr(param->typed_t.id);
 
-            returnLength = strlen("FunctionDeclaration() [, , ]") + strlen(tagName) + strlen(type) + strlen(id) + 1;
+            returnLength = strlen("FunctionDeclaration() [, , ]") + strlen(tagName) + strlen(type) + strlen(id_) + 1;
             returnStr = malloc(returnLength);
 
-            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s, %s]", tagName, type, id);
+            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s, %s]", tagName, type, id_);
             break;
         default:
             return "Error: invalid or unset tag";

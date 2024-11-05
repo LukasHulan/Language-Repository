@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <parse_tree.h>
-#include <to_string.h>
-#include <test_harness.h>
+#include "parse_tree.h"
+#include "to_string.h"
+#include "test_harness.h"
 
 enum testType {COMPARE_STRINGS, COMPARE_TREES, TEST_PARSE, TEST_PARSE_AGINST_TREE, 
                TEST_REPRESNTATION, TEST_TO_STRING};
@@ -115,8 +115,8 @@ void unitTesting() {
     // Declare data for tests
 
     // Compile array of data to test
-    testData tests[1];
+    testData* tests[1];
 
     // Run the tests
-    runTests(tests, 0);
+    runTests(&tests[1], 0);
 }

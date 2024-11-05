@@ -1,10 +1,60 @@
 #ifndef PARSE_TREE
 #define PARSE_TREE
 
-enum numDataTag {INT, DOUBLE};
+enum tags {
+    INT,
+    DOUBLE,
+    SINGLE,
+    MULTI,
+    BLOCK,
+    DEFINE,
+    EXECUTE,
+    RETURN,
+    IF,
+    WHILE,
+    PASS,
+    IF_ONLY,
+    IF_ELSE,
+    IF_ELSEIF,
+    IF_ELSEIF_ELSE,
+    PARENTHESES,
+    IDENTIFIER,
+    NUMERIC,
+    BOOLEAN,
+    CHARACTER,
+    LIST,
+    EVALUATE,
+    FUNCTION,
+    NUMBER,
+    NUMERIC_OPERATOR,
+    ADD,
+    SUBTRACT,
+    MULTIPLY,
+    DIVIDE,
+    TRUE,
+    FALSE,
+    NOT,
+    OR,
+    AND,
+    EQUALS,
+    EMPTY,
+    NOT_EMPTY,
+    NUMBER_DATA,
+    PROGRAM,
+    MULTIPLE_STATEMENTS,
+    STATEMENT,
+    ELSE_IF_CHAIN,
+    EXPRESSION,
+    MULTIPLE_EXPRESSIONS,
+    FUNCTION_DECLARATION,
+    BINDING_IDENTIFIER,
+    TYPED,
+    NOT_TYPED,
+};
 
+// Tags: INT, DOUBLE
 typedef struct numberData_s {
-    enum numDataTag type;
+    enum tags type;
     union {
         int integer;
         double decimal;
@@ -15,10 +65,9 @@ typedef struct program_s {
     struct multipleStatements_s* stmnts;
 } program_s;
 
-enum multiTag {SINGLE, MULTI};
-
+// Tags: SINGLE, MULTI
 typedef struct multipleStatements_s {
-    enum multiTag tag;
+    enum tags tag;
     union {
         struct {
             struct statement_s* stmnt;
@@ -31,10 +80,9 @@ typedef struct multipleStatements_s {
     };
 } multipleStatements_s;
 
-enum stmntTag {BLOCK, DEFINE, EXECUTE, RETURN, IF, WHILE, PASS};
-
+// Tags: BLOCK, DEFINE, EXECUTE, RETURN, IF, WHILE, PASS
 typedef struct statement_s {
-    enum stmntTag tag;
+    enum tags tag;
     union {
         struct {
             struct multipleStatements_s* stmnts;
@@ -69,10 +117,9 @@ typedef struct statement_s {
     };
 } statement_s;
 
-enum ifTag {IF_ONLY, IF_ELSE, IF_ELSEIF, IF_ELSEIF_ELSE};
-
+// Tags: IF_ONLY, IF_ELSE, IF_ELSEIF, IF_ELSEIF_ELSE
 typedef struct if_s {
-    enum ifTag tag;
+    enum tags tag;
     union {
         struct {
             struct expression_s* ifExpr;
@@ -101,7 +148,7 @@ typedef struct if_s {
 } if_s;
 
 typedef struct elseIfChain_s {
-    enum multiTag tag;
+    enum tags tag;
     union {
         struct {
             struct expression_s* ifExpr;
@@ -116,10 +163,9 @@ typedef struct elseIfChain_s {
     };
 } elseIfChain_s;
 
-enum exprTag {PARENTHESES, IDENTIFIER, NUMERIC, BOOLEAN, CHARACTER, LIST, EVALUATE, FUNCTION};
-
+// Tags: PARENTHESES, IDENTIFIER, NUMERIC, BOOLEAN, CHARACTER, LIST, EVALUATE, FUNCTION
 typedef struct expression_s {
-    enum exprTag tag;
+    enum tags tag;
     union {
         struct {
             struct expression_s* expr;
@@ -156,11 +202,10 @@ typedef struct expression_s {
     };
 } expression_s;
 
-enum numTag {NUMBER, NUMERIC_OPERATOR};
-enum operator {ADD, SUBTRACT, MULTIPLY, DIVIDE};
-
+// Tags: NUMBER, NUMERIC_OPERATOR
+// Operators: ADD, SUBTRACT, MULTIPLY, DIVIDE
 typedef struct numeric_s {
-    enum numTag tag;
+    enum tags tag;
     union {
         struct {
             struct numberData_s* num;
@@ -169,15 +214,14 @@ typedef struct numeric_s {
         struct {
             struct numberData_s* num1;
             struct numberData_s* num2;
-            enum operator op;
+            enum tags op;
         } numeric_operator_t;
     }; 
 } numeric_s;
 
-enum boolTag {TRUE, FALSE, NOT, OR, AND, EQUALS};
-
+// Tags: TRUE, FALSE, NOT, OR, AND, EQUALS
 typedef struct boolean_s {
-    enum boolTag tag;
+    enum tags tag;
     union {
         struct {
             int placeholder;
@@ -208,10 +252,9 @@ typedef struct boolean_s {
     };
 } boolean_s;
 
-enum listTag {EMPTY, NOT_EMPTY};
-
+// Tags: EMPTY, NOT_EMPTY
 typedef struct list_s {
-    enum listTag tag;
+    enum tags tag;
     union {
         struct {
             int placeholder;
@@ -224,7 +267,7 @@ typedef struct list_s {
 } list_s;
 
 typedef struct multipleExpressions_s {
-    enum multiTag tag;
+    enum tags tag;
     union {
         struct {
             struct expression_s* expr;
@@ -237,10 +280,9 @@ typedef struct multipleExpressions_s {
     };
 } multipleExpressions_s;
 
-enum typedTag {TYPED, NOT_TYPED};
-
+// Tags: TYPED, NOT_TYPED
 typedef struct functionDeclaration_s {
-    enum typedTag tag;
+    enum tags tag;
     union {
         struct {
             struct list_s* list;
@@ -256,7 +298,7 @@ typedef struct functionDeclaration_s {
 } functionDeclaration_s;
 
 typedef struct bindingIdentifier_s {
-    enum typedTag tag;
+    enum tags tag;
     union {
         struct {
             struct identifier_s* id;
@@ -295,12 +337,11 @@ typedef union parseTreeType_s {
     identifier_s identifierValue;
 } parseTreeType_s;
 
-enum parseType {NUMBER_DATA, PROGRAM, MULTIPLE_STATEMENTS, STATEMENT, IF, ELSE_IF_CHAIN, 
-                EXPRESSION, NUMERIC, BOOLEAN, LIST,  MULTIPLE_EXPRESSIONS, 
-                FUNCTION_DECLARATION, BINDING_IDENTIFIER, CHARACTER, IDENTIFIER};
-
+// Tags: NUMBER_DATA, PROGRAM, MULTIPLE_STATEMENTS, STATEMENT, IF, ELSE_IF_CHAIN, 
+//       EXPRESSION, NUMERIC, BOOLEAN, LIST,  MULTIPLE_EXPRESSIONS, 
+//       FUNCTION_DECLARATION, BINDING_IDENTIFIER, CHARACTER, IDENTIFIER
 typedef struct parseTree {
-    enum parseType type;
+    enum tags type;
     parseTreeType_s* tree;
 } parseTree;
 

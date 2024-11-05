@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <parse_tree.h>
-#include <to_string.h>
-#include <test_harness.h>
+#include "parse_tree.h"
+#include "to_string.h"
+#include "test_harness.h"
 
 int main() {
     // "define x: 5"

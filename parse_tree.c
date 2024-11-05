@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <parse_tree.h>
-#include <to_string.h>
+#include "parse_tree.h"
+#include "to_string.h"
 
 int ptcmp(parseTree* first, parseTree* second) {
     if (first->type != second->type) {
