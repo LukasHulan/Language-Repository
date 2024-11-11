@@ -164,6 +164,11 @@ void unitTesting() {
     passStmnt->tag = PASS;
     passStmnt->pass_t.placeholder = 1;
 
+    multipleStatements_s* multiPassDef = malloc(sizeof(multipleStatements_s));
+    multiPassDef->tag = MULTI;
+    multiPassDef->multi_t.first = passStmnt;
+    multiPassDef->multi_t.rest = defMultStmnt;
+
     parseTree* ptPassStmnt = malloc(sizeof(parseTree));
     ptPassStmnt->type = STATEMENT;
     ptPassStmnt->tree.statementValue = passStmnt;
@@ -171,6 +176,10 @@ void unitTesting() {
     parseTree* ptIfStmnt = malloc(sizeof(parseTree));
     ptIfStmnt->type = PROGRAM;
     ptIfStmnt->tree.programValue = ifStmntRoot;
+
+    parseTree* ptMultiPassDef = malloc(sizeof(parseTree));
+    ptMultiPassDef->type = MULTIPLE_STATEMENTS;
+    ptMultiPassDef->tree.multipleStatementsValue = multiPassDef;
 
     testData* reprTest1 = malloc(sizeof(testData));
     reprTest1->type = TEST_REPRESNTATION;
@@ -182,9 +191,14 @@ void unitTesting() {
     reprTest2->testRepr.tree = ptPassStmnt;
     reprTest2->testRepr.repr = "Statement(pass)";
 
+    testData* reprTest3 = malloc(sizeof(testData));
+    reprTest3->type = TEST_REPRESNTATION;
+    reprTest3->testRepr.tree = ptMultiPassDef;
+    reprTest3->testRepr.repr = "MultipleStatements(multi): [Statement(pass), MultipleStatements(single): [Statement(define): [BindingIdentifier(not typed) [Identifier: [x]], Expression(numeric): [Numeric(number): [NumberData(integer): [5]]]]]]";
+
     // Compile array of data to test
-    testData* tests[] = {reprTest1, reprTest2};
+    testData* tests[] = {reprTest1, reprTest2, reprTest3};
 
     // Run the tests
-    runTests(tests, 2);
+    runTests(tests, 3);
 }
