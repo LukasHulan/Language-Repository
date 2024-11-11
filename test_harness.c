@@ -49,60 +49,60 @@ int runTests(testData* tests[], int numTests) {
 
     printf("Running tests: %d\n", numTests);
     
-    for (int testCounter = 1; testCounter <= numTests; testCounter++) {
+    for (int testCounter = 0; testCounter < numTests; testCounter++) {
         testData* current = tests[testCounter];
 
         switch (current->type) {
             case COMPARE_STRINGS:
                 if (strcmp(current->cmprStrs.first, current->cmprStrs.second)) {
                     testsFailed++;
-                    printf("Failed test: %d\n", testCounter);
+                    printf("Failed test: %d\n", (testCounter + 1));
                 }
 
                 break;
             case COMPARE_TREES:
                 if (ptcmp(current->cmprPTs.first, current->cmprPTs.second)) {
                     testsFailed++;
-                    printf("Failed test: %d\n", testCounter);
+                    printf("Failed test: %d\n", (testCounter + 1));
                 }
 
                 break;
             case TEST_PARSE:
                 if (1 /*To do*/) {
                     testsFailed++;
-                    printf("Failed test: %d\n", testCounter);
+                    printf("Failed test: %d\n", (testCounter + 1));
                 }
 
                 break;
             case TEST_PARSE_AGINST_TREE:
                 if (1 /*To do*/) {
                     testsFailed++;
-                    printf("Failed test: %d\n", testCounter);
+                    printf("Failed test: %d\n", (testCounter + 1));
                 }
 
                 break;
             case TEST_REPRESNTATION:
                 if (strcmp(parseTreeRepr(current->testRepr.tree), current->testRepr.repr)) {
                     testsFailed++;
-                    printf("Failed test: %d\n", testCounter);
+                    printf("Failed test: %d\n", (testCounter + 1));
                 }
 
                 break;
             case TEST_TO_STRING:
                 if (1 /*To do*/) {
                     testsFailed++;
-                    printf("Failed test: %d\n", testCounter);
+                    printf("Failed test: %d\n", (testCounter + 1));
                 }
 
                 break;
             default:
                 errors++;
-                printf("Error at test %d: invalid or unset type\n", testCounter);
+                printf("Error at test %d: invalid or unset type\n", (testCounter + 1));
         }
     }
 
     printf("\n");
-    printf("Tests passed: %d\n", numTests - testsFailed);
+    printf("Tests passed: %d\n", (numTests - testsFailed - errors));
     printf("Tests failed: %d\n", testsFailed);
 
     if (errors > 0) {
@@ -164,20 +164,27 @@ void unitTesting() {
     passStmnt->tag = PASS;
     passStmnt->pass_t.placeholder = 1;
 
+    parseTree* ptPassStmnt = malloc(sizeof(parseTree));
+    ptPassStmnt->type = STATEMENT;
+    ptPassStmnt->tree.statementValue = passStmnt;
+
     parseTree* ptIfStmnt = malloc(sizeof(parseTree));
     ptIfStmnt->type = PROGRAM;
     ptIfStmnt->tree.programValue = ifStmntRoot;
 
-    // printf("%s", parseTreeRepr(ptIfStmnt));
-
     testData* reprTest1 = malloc(sizeof(testData));
     reprTest1->type = TEST_REPRESNTATION;
     reprTest1->testRepr.tree = ptIfStmnt;
-    reprTest1->testRepr.repr = "Program: [MultipleStatements(single): [Statement(if): [If(if_only): [Expression(boolean): [Boolean(true)], Statement(define): [FunctionDeclaration(not typed) [Identifier: [x]], Expression(numeric): [Numeric(number): [NumberData(integer): [5]]]]]]]]";
+    reprTest1->testRepr.repr = "Program: [MultipleStatements(single): [Statement(if): [If(if_only): [Expression(boolean): [Boolean(true)], Statement(define): [BindingIdentifier(not typed) [Identifier: [x]], Expression(numeric): [Numeric(number): [NumberData(integer): [5]]]]]]]]";
+
+    testData* reprTest2 = malloc(sizeof(testData));
+    reprTest2->type = TEST_REPRESNTATION;
+    reprTest2->testRepr.tree = ptPassStmnt;
+    reprTest2->testRepr.repr = "Statement(pass)";
 
     // Compile array of data to test
-    testData* tests[1] = {reprTest1};
+    testData* tests[] = {reprTest1, reprTest2};
 
     // Run the tests
-    runTests(tests, 1);
+    runTests(tests, 2);
 }

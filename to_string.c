@@ -574,10 +574,10 @@ char* bindingIdentifierRepr(bindingIdentifier_s* param) {
 
             char* id = identifierRepr(param->not_typed_t.id);
 
-            returnLength = strlen("FunctionDeclaration() []") + strlen(tagName) + strlen(id) + 1;
+            returnLength = strlen("BindingIdentifier() []") + strlen(tagName) + strlen(id) + 1;
             returnStr = malloc(returnLength);
 
-            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s]", tagName, id);
+            snprintf(returnStr, returnLength, "BindingIdentifier(%s) [%s]", tagName, id);
             break;
         case TYPED:
             tagName = "typed";
@@ -585,10 +585,10 @@ char* bindingIdentifierRepr(bindingIdentifier_s* param) {
             char* type = identifierRepr(param->typed_t.type);
             char* id_ = identifierRepr(param->typed_t.id);
 
-            returnLength = strlen("FunctionDeclaration() [, , ]") + strlen(tagName) + strlen(type) + strlen(id_) + 1;
+            returnLength = strlen("BindingIdentifier() [, , ]") + strlen(tagName) + strlen(type) + strlen(id_) + 1;
             returnStr = malloc(returnLength);
 
-            snprintf(returnStr, returnLength, "FunctionDeclaration(%s) [%s, %s]", tagName, type, id_);
+            snprintf(returnStr, returnLength, "BindingIdentifier(%s) [%s, %s]", tagName, type, id_);
             break;
         default:
             return "Error: invalid or unset tag";
