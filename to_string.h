@@ -18,6 +18,7 @@ char* functionDeclarationRepr(functionDeclaration_s* param);
 char* bindingIdentifierRepr(bindingIdentifier_s* param);
 char* characterRepr(character_s* param);
 char* identifierRepr(identifier_s* param);
+char* parseTreeRepr(parseTree* param);
 
 // char* numberDataToString(numberData_s* param);
 // char* programToString(program_s* param);

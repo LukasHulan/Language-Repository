@@ -320,21 +320,21 @@ typedef struct identifier_s {
 } identifier_s;
 
 typedef union parseTreeType_s {
-    numberData_s numberDataValue;
-    program_s programValue;
-    multipleStatements_s multipleStatementsValue;
-    statement_s statementValue;
-    if_s ifValue;
-    elseIfChain_s elseIfChainValue;
-    expression_s expressionValue;
-    numeric_s numericValue;
-    boolean_s booleanValue;
-    list_s listValue;
-    multipleExpressions_s multipleExpressionsValue;
-    functionDeclaration_s functionDeclarationValue;
-    bindingIdentifier_s bindingIdentifierValue;
-    character_s characterValue;
-    identifier_s identifierValue;
+    numberData_s* numberDataValue;
+    program_s* programValue;
+    multipleStatements_s* multipleStatementsValue;
+    statement_s* statementValue;
+    if_s* ifValue;
+    elseIfChain_s* elseIfChainValue;
+    expression_s* expressionValue;
+    numeric_s* numericValue;
+    boolean_s* booleanValue;
+    list_s* listValue;
+    multipleExpressions_s* multipleExpressionsValue;
+    functionDeclaration_s* functionDeclarationValue;
+    bindingIdentifier_s* bindingIdentifierValue;
+    character_s* characterValue;
+    identifier_s* identifierValue;
 } parseTreeType_s;
 
 // Tags: NUMBER_DATA, PROGRAM, MULTIPLE_STATEMENTS, STATEMENT, IF, ELSE_IF_CHAIN, 
@@ -342,7 +342,7 @@ typedef union parseTreeType_s {
 //       FUNCTION_DECLARATION, BINDING_IDENTIFIER, CHARACTER, IDENTIFIER
 typedef struct parseTree {
     enum tags type;
-    parseTreeType_s* tree;
+    parseTreeType_s tree;
 } parseTree;
 
 int ptcmp(parseTree* first, parseTree* second);

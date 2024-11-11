@@ -48,7 +48,7 @@ char* numberDataRepr(numberData_s* param) {
         return "Error: invalid or unset tag";
     }
 
-    returnLength = strlen("NumberData(): []") + paramlength;
+    returnLength = strlen("NumberData(): []") + strlen(typeName) + paramlength;
     returnStr = malloc(returnLength);
 
     snprintf(returnStr, returnLength, "NumberData(%s): [%s]", typeName, paramStr);
@@ -598,9 +598,69 @@ char* bindingIdentifierRepr(bindingIdentifier_s* param) {
 }
 
 char* characterRepr(character_s* param) {
-    return param->character;
+    int returnLength = strlen("Character: []") + 2;
+    char* returnStr = malloc(returnLength);
+
+    snprintf(returnStr, returnLength, "Character: [%c]", param->character);
+    return returnStr;
 }
 
 char* identifierRepr(identifier_s* param) {
-    return param->identifier;
+    int returnLength = strlen("Identifier: []") + strlen(param->identifier) + 1;
+    char* returnStr = malloc(returnLength);
+
+    snprintf(returnStr, returnLength, "Identifier: [%s]", param->identifier);
+    return returnStr;
+}
+
+char* parseTreeRepr(parseTree* param) {
+    switch (param->type) {
+        case NUMBER_DATA:
+            return numberDataRepr(param->tree.numberDataValue);
+            break;
+        case PROGRAM:
+            return programRepr(param->tree.programValue);
+            break;
+        case MULTIPLE_STATEMENTS:
+            return multipleStatementsRepr(param->tree.multipleStatementsValue);
+            break;
+        case STATEMENT:
+            return statementRepr(param->tree.statementValue);
+            break;
+        case IF:
+            return ifRepr(param->tree.ifValue);
+            break;
+        case ELSE_IF_CHAIN:
+            return elseIfChainRepr(param->tree.elseIfChainValue);
+            break;
+        case EXPRESSION:
+            return expressionRepr(param->tree.expressionValue);
+            break;
+        case NUMERIC:
+            return numericRepr(param->tree.numericValue);
+            break;
+        case BOOLEAN:
+            return booleanRepr(param->tree.booleanValue);
+            break;
+        case LIST:
+            return listRepr(param->tree.listValue);
+            break;
+        case MULTIPLE_EXPRESSIONS:
+            return multipleExpressionsRepr(param->tree.multipleExpressionsValue);
+            break;
+        case FUNCTION_DECLARATION:
+            return functionDeclarationRepr(param->tree.functionDeclarationValue);
+            break;
+        case BINDING_IDENTIFIER:
+            return bindingIdentifierRepr(param->tree.bindingIdentifierValue);
+            break;
+        case CHARACTER:
+            return characterRepr(param->tree.characterValue);
+            break;
+        case IDENTIFIER:
+            return identifierRepr(param->tree.identifierValue);
+            break;
+        default:
+            return "Error: invalid or unset tag";
+    }
 }
