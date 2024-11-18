@@ -5,10 +5,26 @@
 
 #include "to_string.h"
 
+// Removes the character at the target index from the string
+// Returns modified copy of input, does not mutate
+char* removeChar(char* original, int index) {
+    int length = strlen(original);
+    char* returnStr = malloc(length + 1);
+
+    strncpy(returnStr, original, length + 1);
+
+    memmove(&returnStr[index], &returnStr[index + 1], length - index);
+
+    return returnStr;
+}
+
+// Changes all standard whitespace characters to space and removes unnecessary whitespace
+// Returns modified copy of input, does not mutate
 char* normalizeWhitespace(char* original) {
     int length = strlen(original);
     char* returnStr = malloc(length + 1);
 
+    // Copies original to returnStr while changing all whitespace characters to spaces
     for (int i = 0; i < length; i++) {
         if (isspace(original[i])) {
             returnStr[i] = ' ';
@@ -17,12 +33,38 @@ char* normalizeWhitespace(char* original) {
         }
     }
 
-    returnStr[length + 1] = '\0';
+    returnStr[length] = '\0';
+
+    // Chops off any leading spaces
+    while (returnStr[0] == ' ') {
+        returnStr = removeChar(returnStr, 0);
+    }
+
+    // Removes unnecessary spaces from the rest of the string
+    char previousChar = returnStr[0];
+
+    for (int j = 1; returnStr[j] != '\0'; j++) {
+        if (returnStr[j] == ' ' && previousChar == ' ') {
+            returnStr = removeChar(returnStr, j);
+
+            j -= 1;
+        }
+
+        previousChar = returnStr[j];
+    }
+
+    // Chops off the trailing space if there is one
+    length = strlen(returnStr) - 1;
+
+    if (returnStr[length] == ' ') {
+        returnStr = removeChar(returnStr, length);
+    }
 
     return returnStr;
 }
 
 // Representation functions
+
 char* numberDataRepr(numberData_s* param) {
     char* typeName;
     int paramlength;
