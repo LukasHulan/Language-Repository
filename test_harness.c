@@ -63,11 +63,11 @@ typedef struct testData {
 int runTests(testData* tests[], int numTests) {
     int testsFailed = 0;
     int errors = 0;
+
+    printf("Running tests: %d\n", numTests);
     
     for (int testCounter = 0; testCounter < numTests; testCounter++) {
         testData* current = tests[testCounter];
-
-        printf("Running test %d\n", testCounter + 1);
 
         switch (current->type) {
             case COMPARE_STRINGS:
