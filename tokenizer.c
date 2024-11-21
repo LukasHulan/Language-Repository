@@ -9,18 +9,18 @@
 tokenData* tokenize(char* input) {
     tokenData* result = malloc(sizeof(tokenData));
 
+    char* str = normalizeWhitespace(input);
+    int length = strlen(str);
+    int tokensFound = 0;
+
     // Guard statement to handle empty input
-    if (!strcmp(input, "")) {
+    if (!strcmp(str, "")) {
         result->index = 0;
         result->length = 0;
         result->tokens = malloc(sizeof(char*));
 
         return result;
     }
-
-    char* str = normalizeWhitespace(input);
-    int length = strlen(str);
-    int tokensFound = 0;
 
     // Count tokens
     for (int i = 0; i < length; i++) {
@@ -135,12 +135,10 @@ tokenData* tokenize(char* input) {
 
 int tkncmp(tokenData* first, tokenData* second) {
     if (first->length != second->length) {
-        // printf("%d/%d\n", first->length, second->length);
         return 1;
     }
 
     for (int i = 0; i < first->length; i++) {
-        printf("\"%s\"/\"%s\"\n", first->tokens[i], second->tokens[i]);
         if (strcmp(first->tokens[i], second->tokens[i])) {
             return 1;
         }

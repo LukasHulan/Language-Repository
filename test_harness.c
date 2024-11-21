@@ -63,11 +63,11 @@ typedef struct testData {
 int runTests(testData* tests[], int numTests) {
     int testsFailed = 0;
     int errors = 0;
-
-    printf("Running tests: %d\n", numTests);
     
     for (int testCounter = 0; testCounter < numTests; testCounter++) {
         testData* current = tests[testCounter];
+
+        printf("Running test %d\n", testCounter + 1);
 
         switch (current->type) {
             case COMPARE_STRINGS:
@@ -225,23 +225,35 @@ void unitTesting() {
     emptyToken->length = 0;
     emptyToken->tokens = malloc(sizeof(char*));
 
+    char* tokenArray1[] = {":"};
     tokenData* punctuationToken = malloc(sizeof(tokenData));
     punctuationToken->index = 0;
     punctuationToken->length = 1;
-    char* tokenArray1[] = {":"};
     punctuationToken->tokens = tokenArray1;
 
+    char* tokenArray2[] = {"Hello"};
     tokenData* helloToken = malloc(sizeof(tokenData));
     helloToken->index = 0;
     helloToken->length = 1;
-    char* tokenArray3[] = {"Hello"};
-    helloToken->tokens = tokenArray3;
+    helloToken->tokens = tokenArray2;
 
+    char* tokenArray3[] = {"Hello", ":", "world"};
     tokenData* helloWorldToken = malloc(sizeof(tokenData));
     helloWorldToken->index = 0;
     helloWorldToken->length = 3;
-    char* tokenArray2[] = {"Hello", ":", "world"};
-    helloWorldToken->tokens = tokenArray2;
+    helloWorldToken->tokens = tokenArray3;
+
+    char* tokenArray4[] = {"H"};
+    tokenData* letterToken = malloc(sizeof(tokenData));
+    letterToken->index = 0;
+    letterToken->length = 1;
+    letterToken->tokens = tokenArray4;
+
+    char* tokenArray5[] = {"Hello", "world", ":"};
+    tokenData* helloWorldToken2 = malloc(sizeof(tokenData));
+    helloWorldToken2->index = 0;
+    helloWorldToken2->length = 3;
+    helloWorldToken2->tokens = tokenArray5;
 
     // Test 1
     testData* reprTest1 = malloc(sizeof(testData));
@@ -351,15 +363,33 @@ void unitTesting() {
     tknsTest7->testTknize.str = "Hello : world";
     tknsTest7->testTknize.tkns = helloWorldToken;
 
+    // Test 19
+    testData* tknsTest8 = malloc(sizeof(testData));
+    tknsTest8->type = TEST_TOKENIZE;
+    tknsTest8->testTknize.str = "H";
+    tknsTest8->testTknize.tkns = letterToken;
+
+    // Test 20
+    testData* tknsTest9 = malloc(sizeof(testData));
+    tknsTest9->type = TEST_TOKENIZE;
+    tknsTest9->testTknize.str = "Hello world:";
+    tknsTest9->testTknize.tkns = helloWorldToken2;
+
+    // Test 21
+    testData* tknsTest10 = malloc(sizeof(testData));
+    tknsTest10->type = TEST_TOKENIZE;
+    tknsTest10->testTknize.str = "Hello world :";
+    tknsTest10->testTknize.tkns = helloWorldToken2;
+
     // Compile array of data to test
     testData* tests[] = {
         reprTest1, reprTest2, reprTest3, 
         normTest1, normTest2, normTest3, normTest4, normTest5, normTest6,
         pnctTest1, pnctTest2,
-        tknsTest1, tknsTest2, tknsTest3, tknsTest4, tknsTest5, tknsTest6, tknsTest7
+        tknsTest1, tknsTest2, tknsTest3, tknsTest4, tknsTest5, tknsTest6, tknsTest7, tknsTest8, tknsTest9, tknsTest10
     };
 
     // Run the tests
     
-    runTests(tests, 18);
+    runTests(tests, 21);
 }
