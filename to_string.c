@@ -5,6 +5,12 @@
 
 #include "to_string.h"
 
+int isPunctuation(char c) {
+    char* punctuation = ":<>()[]{}+-*/!=&|";
+
+    return (strchr(punctuation, c) != NULL);
+}
+
 // Removes the character at the target index from the string
 // Returns modified copy of input, does not mutate
 char* removeChar(char* original, int index) {

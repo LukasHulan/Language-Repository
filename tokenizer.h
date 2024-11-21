@@ -8,7 +8,11 @@ typedef struct tokenData {
 } tokenData;
 
 tokenData* tokenize(char* input);
-int isPunctuation(char c);
+
 int tkncmp(tokenData* first, tokenData* second);
+
+char* getToken(tokenData* tknData, int target);
+char* peekToken(tokenData* tknData);
+char* popToken(tokenData* tknData);
 
 #endif

@@ -7,8 +7,9 @@
 #include "tokenizer.h"
 #include "test_harness.h"
 
-enum testType {COMPARE_STRINGS, COMPARE_TREES, TEST_PARSE, TEST_PARSE_AGINST_TREE, 
-               TEST_REPRESNTATION, TEST_TO_STRING, COMPARE_INTS, COMPARE_TOKENS};
+enum testType {COMPARE_STRINGS, COMPARE_TREES, TEST_PARSE, TEST_PARSE_AGINST_TREE,
+               TEST_REPRESNTATION, TEST_TO_STRING, COMPARE_INTS, COMPARE_TOKENS,
+               TEST_TOKENIZE};
 
 typedef struct testData {
     enum testType type;
@@ -51,6 +52,11 @@ typedef struct testData {
             tokenData* first;
             tokenData* second;
         } cmprTkns;
+
+        struct {
+            char* str;
+            tokenData* tkns;
+        } testTknize;
     };
 } testData;
 
@@ -114,7 +120,14 @@ int runTests(testData* tests[], int numTests) {
 
                 break;
             case COMPARE_TOKENS:
-                if (!tkncmp(current->cmprTkns.first, current->cmprTkns.second)) {
+                if (tkncmp(current->cmprTkns.first, current->cmprTkns.second)) {
+                    testsFailed++;
+                    printf("Failed test: %d\n", (testCounter + 1));
+                }
+
+                break;
+            case TEST_TOKENIZE:
+                if (tkncmp(tokenize(current->testTknize.str), current->testTknize.tkns)) {
                     testsFailed++;
                     printf("Failed test: %d\n", (testCounter + 1));
                 }
@@ -207,92 +220,146 @@ void unitTesting() {
     ptMultiPassDef->type = MULTIPLE_STATEMENTS;
     ptMultiPassDef->tree.multipleStatementsValue = multiPassDef;
 
-    testData* reprTest1 = malloc(sizeof(testData));
-    reprTest1->type = TEST_REPRESNTATION;
-    reprTest1->testRepr.tree = ptIfStmnt;
-    reprTest1->testRepr.repr = "Program: [MultipleStatements(single): [Statement(if): [If(if_only): [Expression(boolean): [Boolean(true)], Statement(define): [BindingIdentifier(not typed) [Identifier: [x]], Expression(numeric): [Numeric(number): [NumberData(integer): [5]]]]]]]]";
-
-    testData* reprTest2 = malloc(sizeof(testData));
-    reprTest2->type = TEST_REPRESNTATION;
-    reprTest2->testRepr.tree = ptPassStmnt;
-    reprTest2->testRepr.repr = "Statement(pass)";
-
-    testData* reprTest3 = malloc(sizeof(testData));
-    reprTest3->type = TEST_REPRESNTATION;
-    reprTest3->testRepr.tree = ptMultiPassDef;
-    reprTest3->testRepr.repr = "MultipleStatements(multi): [Statement(pass), MultipleStatements(single): [Statement(define): [BindingIdentifier(not typed) [Identifier: [x]], Expression(numeric): [Numeric(number): [NumberData(integer): [5]]]]]]";
-
-    testData* normTest1 = malloc(sizeof(testData));
-    normTest1->type = COMPARE_STRINGS;
-    normTest1->cmprStrs.first = normalizeWhitespace("");
-    normTest1->cmprStrs.second = "";
-
-    testData* normTest2 = malloc(sizeof(testData));
-    normTest2->type = COMPARE_STRINGS;
-    normTest2->cmprStrs.first = normalizeWhitespace("Hello\nworld");
-    normTest2->cmprStrs.second = "Hello world";
-
-    testData* normTest3 = malloc(sizeof(testData));
-    normTest3->type = COMPARE_STRINGS;
-    normTest3->cmprStrs.first = normalizeWhitespace("Hello\tworld");
-    normTest3->cmprStrs.second = "Hello world";
-
-    testData* normTest4 = malloc(sizeof(testData));
-    normTest4->type = COMPARE_STRINGS;
-    normTest4->cmprStrs.first = normalizeWhitespace(" Hello world");
-    normTest4->cmprStrs.second = "Hello world";
-
-    testData* normTest5 = malloc(sizeof(testData));
-    normTest5->type = COMPARE_STRINGS;
-    normTest5->cmprStrs.first = normalizeWhitespace("Hello world ");
-    normTest5->cmprStrs.second = "Hello world";
-
-    testData* normTest6 = malloc(sizeof(testData));
-    normTest6->type = COMPARE_STRINGS;
-    normTest6->cmprStrs.first = normalizeWhitespace(" \n\t  Hello\n\t\n \n world  \t");
-    normTest6->cmprStrs.second = "Hello world";
-
-    testData* pnctTest1 = malloc(sizeof(testData));
-    pnctTest1->type = COMPARE_INTS;
-    pnctTest1->cmprInts.first = isPunctuation(' ');
-    pnctTest1->cmprInts.second = 0;
-
-    testData* pnctTest2 = malloc(sizeof(testData));
-    pnctTest2->type = COMPARE_INTS;
-    pnctTest2->cmprInts.first = isPunctuation(':');
-    pnctTest2->cmprInts.second = 1;
-
     tokenData* emptyToken = malloc(sizeof(tokenData));
     emptyToken->index = 0;
     emptyToken->length = 0;
     emptyToken->tokens = malloc(sizeof(char*));
 
-    testData* tknsTest1 = malloc(sizeof(testData));
-    tknsTest1->type = COMPARE_TOKENS;
-    tknsTest1->cmprTkns.first = tokenize("");
-    tknsTest1->cmprTkns.second = emptyToken;
+    tokenData* punctuationToken = malloc(sizeof(tokenData));
+    punctuationToken->index = 0;
+    punctuationToken->length = 1;
+    char* tokenArray1[] = {":"};
+    punctuationToken->tokens = tokenArray1;
+
+    tokenData* helloToken = malloc(sizeof(tokenData));
+    helloToken->index = 0;
+    helloToken->length = 1;
+    char* tokenArray3[] = {"Hello"};
+    helloToken->tokens = tokenArray3;
 
     tokenData* helloWorldToken = malloc(sizeof(tokenData));
     helloWorldToken->index = 0;
     helloWorldToken->length = 3;
-    char* strings[] = {"Hello", ":", "world"};
-    helloWorldToken->tokens = strings;
+    char* tokenArray2[] = {"Hello", ":", "world"};
+    helloWorldToken->tokens = tokenArray2;
 
+    // Test 1
+    testData* reprTest1 = malloc(sizeof(testData));
+    reprTest1->type = TEST_REPRESNTATION;
+    reprTest1->testRepr.tree = ptIfStmnt;
+    reprTest1->testRepr.repr = "Program: [MultipleStatements(single): [Statement(if): [If(if_only): [Expression(boolean): [Boolean(true)], Statement(define): [BindingIdentifier(not typed) [Identifier: [x]], Expression(numeric): [Numeric(number): [NumberData(integer): [5]]]]]]]]";
+
+    // Test 2
+    testData* reprTest2 = malloc(sizeof(testData));
+    reprTest2->type = TEST_REPRESNTATION;
+    reprTest2->testRepr.tree = ptPassStmnt;
+    reprTest2->testRepr.repr = "Statement(pass)";
+
+    // Test 3
+    testData* reprTest3 = malloc(sizeof(testData));
+    reprTest3->type = TEST_REPRESNTATION;
+    reprTest3->testRepr.tree = ptMultiPassDef;
+    reprTest3->testRepr.repr = "MultipleStatements(multi): [Statement(pass), MultipleStatements(single): [Statement(define): [BindingIdentifier(not typed) [Identifier: [x]], Expression(numeric): [Numeric(number): [NumberData(integer): [5]]]]]]";
+
+    // Test 4
+    testData* normTest1 = malloc(sizeof(testData));
+    normTest1->type = COMPARE_STRINGS;
+    normTest1->cmprStrs.first = normalizeWhitespace("");
+    normTest1->cmprStrs.second = "";
+
+    // Test 5
+    testData* normTest2 = malloc(sizeof(testData));
+    normTest2->type = COMPARE_STRINGS;
+    normTest2->cmprStrs.first = normalizeWhitespace("Hello\nworld");
+    normTest2->cmprStrs.second = "Hello world";
+
+    // Test 6
+    testData* normTest3 = malloc(sizeof(testData));
+    normTest3->type = COMPARE_STRINGS;
+    normTest3->cmprStrs.first = normalizeWhitespace("Hello\tworld");
+    normTest3->cmprStrs.second = "Hello world";
+
+    // Test 7
+    testData* normTest4 = malloc(sizeof(testData));
+    normTest4->type = COMPARE_STRINGS;
+    normTest4->cmprStrs.first = normalizeWhitespace(" Hello world");
+    normTest4->cmprStrs.second = "Hello world";
+
+    // Test 8
+    testData* normTest5 = malloc(sizeof(testData));
+    normTest5->type = COMPARE_STRINGS;
+    normTest5->cmprStrs.first = normalizeWhitespace("Hello world ");
+    normTest5->cmprStrs.second = "Hello world";
+
+    // Test 9
+    testData* normTest6 = malloc(sizeof(testData));
+    normTest6->type = COMPARE_STRINGS;
+    normTest6->cmprStrs.first = normalizeWhitespace(" \n\t  Hello\n\t\n \n world  \t");
+    normTest6->cmprStrs.second = "Hello world";
+
+    // Test 10
+    testData* pnctTest1 = malloc(sizeof(testData));
+    pnctTest1->type = COMPARE_INTS;
+    pnctTest1->cmprInts.first = isPunctuation(' ');
+    pnctTest1->cmprInts.second = 0;
+
+    // Test 11
+    testData* pnctTest2 = malloc(sizeof(testData));
+    pnctTest2->type = COMPARE_INTS;
+    pnctTest2->cmprInts.first = isPunctuation(':');
+    pnctTest2->cmprInts.second = 1;
+
+    // Test 12
+    testData* tknsTest1 = malloc(sizeof(testData));
+    tknsTest1->type = TEST_TOKENIZE;
+    tknsTest1->testTknize.str = "";
+    tknsTest1->testTknize.tkns = emptyToken;
+
+    // Test 13
     testData* tknsTest2 = malloc(sizeof(testData));
-    tknsTest2->type = COMPARE_TOKENS;
-    tknsTest2->cmprTkns.first = tokenize("Hello: world");
-    tknsTest2->cmprTkns.second = helloWorldToken;
+    tknsTest2->type = TEST_TOKENIZE;
+    tknsTest2->testTknize.str = ":";
+    tknsTest2->testTknize.tkns = punctuationToken;
+
+    // Test 14
+    testData* tknsTest3 = malloc(sizeof(testData));
+    tknsTest3->type = TEST_TOKENIZE;
+    tknsTest3->testTknize.str = "Hello";
+    tknsTest3->testTknize.tkns = helloToken;
+
+    // Test 15
+    testData* tknsTest4 = malloc(sizeof(testData));
+    tknsTest4->type = TEST_TOKENIZE;
+    tknsTest4->testTknize.str = "Hello:world";
+    tknsTest4->testTknize.tkns = helloWorldToken;
+
+    // Test 16
+    testData* tknsTest5 = malloc(sizeof(testData));
+    tknsTest5->type = TEST_TOKENIZE;
+    tknsTest5->testTknize.str = "Hello: world";
+    tknsTest5->testTknize.tkns = helloWorldToken;
+
+    // Test 17
+    testData* tknsTest6 = malloc(sizeof(testData));
+    tknsTest6->type = TEST_TOKENIZE;
+    tknsTest6->testTknize.str = "Hello :world";
+    tknsTest6->testTknize.tkns = helloWorldToken;
+
+    // Test 18
+    testData* tknsTest7 = malloc(sizeof(testData));
+    tknsTest7->type = TEST_TOKENIZE;
+    tknsTest7->testTknize.str = "Hello : world";
+    tknsTest7->testTknize.tkns = helloWorldToken;
 
     // Compile array of data to test
-
     testData* tests[] = {
         reprTest1, reprTest2, reprTest3, 
         normTest1, normTest2, normTest3, normTest4, normTest5, normTest6,
         pnctTest1, pnctTest2,
-        tknsTest1, tknsTest2
+        tknsTest1, tknsTest2, tknsTest3, tknsTest4, tknsTest5, tknsTest6, tknsTest7
     };
 
     // Run the tests
     
-    runTests(tests, 11);
+    runTests(tests, 18);
 }

@@ -20,6 +20,8 @@ char* characterRepr(character_s* param);
 char* identifierRepr(identifier_s* param);
 char* parseTreeRepr(parseTree* param);
 
+int isPunctuation(char c);
+
 // char* numberDataToString(numberData_s* param);
 // char* programToString(program_s* param);
 // char* multipleStatementsToString(multipleStatements_s* param);
