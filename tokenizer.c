@@ -13,7 +13,7 @@ int isPunctuation(char c) {
 }
 
 tokenData* tokenize(char* input) {
-    tokenData* result;
+    tokenData* result = malloc(sizeof(tokenData));
 
     // Guard statement to handle empty input
     if (!strcmp(input, "")) {
@@ -56,7 +56,7 @@ tokenData* tokenize(char* input) {
         int tokenLength = 0;
         char* token = "";
 
-        while (str[currentChar] != ' ' || str[currentChar] != '\0' || !isPunctuation(str[currentChar])) {
+        while (str[currentChar] != ' ' && str[currentChar] != '\0' && !isPunctuation(str[currentChar])) {
             tokenLength++;
             currentChar++;
         }
@@ -66,7 +66,7 @@ tokenData* tokenize(char* input) {
                 token = malloc(tokenLength + 1);
 
                 currentChar = tokenStart;
-                while (str[currentChar] != ' ' || str[currentChar] != '\0' || !isPunctuation(str[currentChar])) {
+                while (str[currentChar] != ' ' && str[currentChar] != '\0' && !isPunctuation(str[currentChar])) {
                     token[currentChar - tokenStart] = str[currentChar];
                     currentChar++;
                 }
@@ -95,7 +95,7 @@ tokenData* tokenize(char* input) {
             token = malloc(tokenLength + 1);
 
             currentChar = tokenStart;
-            while (str[currentChar] != ' ' || str[currentChar] != '\0' || !isPunctuation(str[currentChar])) {
+            while (str[currentChar] != ' ' && str[currentChar] != '\0' && !isPunctuation(str[currentChar])) {
                 token[currentChar - tokenStart] = str[currentChar];
                 currentChar++;
             }
