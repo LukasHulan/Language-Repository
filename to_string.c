@@ -6,13 +6,9 @@
 #include "to_string.h"
 
 int isPunctuation(char c) {
-    if (c == '\0') {
-        return 0;
-    }
-
     char* punctuation = ":<>()[]{}+-*/!=&|";
 
-    return (strchr(punctuation, c) != NULL);
+    return ((strchr(punctuation, c) != NULL) && c != '\0');
 }
 
 // Removes the character at the target index from the string
