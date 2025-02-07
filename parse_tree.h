@@ -147,6 +147,7 @@ typedef struct if_s {
     };
 } if_s;
 
+// Tags: SINGLE, MULTI
 typedef struct elseIfChain_s {
     enum tags tag;
     union {

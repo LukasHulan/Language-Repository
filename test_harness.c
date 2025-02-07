@@ -6,6 +6,7 @@
 #include "to_string.h"
 #include "tokenizer.h"
 #include "test_harness.h"
+#include "parser.h"
 
 enum testType {COMPARE_STRINGS, COMPARE_TREES, TEST_PARSE, TEST_PARSE_AGINST_TREE,
                TEST_REPRESNTATION, TEST_TO_STRING, COMPARE_INTS, COMPARE_TOKENS,
@@ -92,7 +93,7 @@ int runTests(testData* tests[], int numTests) {
 
                 break;
             case TEST_PARSE_AGINST_TREE:
-                if (1 /*To do*/) {
+                if (ptcmp(parse(tokenize(current->testPT.code)), current->testPT.result)) {
                     testsFailed++;
                     printf("Failed test: %d\n", (testCounter + 1));
                 }
