@@ -6,7 +6,7 @@
 #include "to_string.h"
 
 int isPunctuation(char c) {
-    char* punctuation = ":<>()[]{}+-*/!=&|";
+    char* punctuation = ":<>()[]{}+-*/%%!=&|";
 
     return ((strchr(punctuation, c) != NULL) && c != '\0');
 }
@@ -413,8 +413,8 @@ char* numericRepr(numeric_s* param) {
     } else if (param->tag == NUMERIC_OPERATOR) {
         tagName = "numeric operator";
 
-        char* num1Str = numberDataRepr(param->numeric_operator_t.num1);
-        char* num2Str = numberDataRepr(param->numeric_operator_t.num2);
+        char* num1Str = expressionRepr(param->numeric_operator_t.num1);
+        char* num2Str = expressionRepr(param->numeric_operator_t.num2);
 
         char* opStr;
         switch (param->numeric_operator_t.op) {
@@ -429,6 +429,9 @@ char* numericRepr(numeric_s* param) {
                 break;
             case DIVIDE:
                 opStr = "Divide";
+                break;
+            case MOD:
+                opStr = "Mod";
                 break;
             default:
                 opStr = "Error: invalid or unset operator";

@@ -31,6 +31,7 @@ enum tags {
     SUBTRACT,
     MULTIPLY,
     DIVIDE,
+    MOD,
     TRUE,
     FALSE,
     NOT,
@@ -204,7 +205,7 @@ typedef struct expression_s {
 } expression_s;
 
 // Tags: NUMBER, NUMERIC_OPERATOR
-// Operators: ADD, SUBTRACT, MULTIPLY, DIVIDE
+// Operators: ADD, SUBTRACT, MULTIPLY, DIVIDE, MOD
 typedef struct numeric_s {
     enum tags tag;
     union {
@@ -213,8 +214,8 @@ typedef struct numeric_s {
         } number_t;
 
         struct {
-            struct numberData_s* num1;
-            struct numberData_s* num2;
+            struct expression_s* num1;
+            struct expression_s* num2;
             enum tags op;
         } numeric_operator_t;
     }; 
@@ -339,7 +340,7 @@ typedef union parseTreeType_s {
 } parseTreeType_s;
 
 // Tags: NUMBER_DATA, PROGRAM, MULTIPLE_STATEMENTS, STATEMENT, IF, ELSE_IF_CHAIN, 
-//       EXPRESSION, NUMERIC, BOOLEAN, LIST,  MULTIPLE_EXPRESSIONS, 
+//       EXPRESSION, NUMERIC, BOOLEAN, LIST, MULTIPLE_EXPRESSIONS, 
 //       FUNCTION_DECLARATION, BINDING_IDENTIFIER, CHARACTER, IDENTIFIER
 typedef struct parseTree {
     enum tags type;
