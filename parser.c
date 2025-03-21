@@ -6,6 +6,7 @@
 #include "parse_tree.h"
 #include "tokenizer.h"
 #include "to_string.h"
+#include "parser.h"
 
 parseTree* parse(tokenData* tokens) {
     parseTree* programTree = malloc(sizeof(parseTree));
@@ -74,7 +75,7 @@ statement_s* parseStatement(tokenData* tokens) {
             syntaxError();
         }
 
-        stmnt->execute_t.id = id;
+        stmnt->execute_t.id->identifier = id;
 
         if (strcmp(popToken(tokens), ":")) {
             syntaxError();
@@ -219,7 +220,7 @@ expression_s* parseExpression(tokenData* tokens) {
             syntaxError();
         }
 
-        expression->character_t.chr = character;
+        expression->character_t.chr->character = character;
 
         if (strcmp(popToken(tokens), "'")) {
             syntaxError();
@@ -236,7 +237,7 @@ expression_s* parseExpression(tokenData* tokens) {
             syntaxError();
         }
 
-        expression->evaluate_t.id = id;
+        expression->evaluate_t.id->identifier = id;
 
         if (strcmp(popToken(tokens), ":")) {
             syntaxError();
@@ -389,10 +390,10 @@ bindingIdentifier_s* parseBindingIdentifier(tokenData* tokens) {
 
     if (!isIdentifier(peekToken(tokens))) {
         bindingIdentifier->tag = NOT_TYPED;
-        bindingIdentifier->not_typed_t.id = id1;
+        bindingIdentifier->not_typed_t.id->identifier = id1;
     } else {
         bindingIdentifier->tag = TYPED;
-        bindingIdentifier->typed_t.type = id1;
+        bindingIdentifier->typed_t.type->identifier = id1;
 
         char* id2 = popToken(tokens);
 
@@ -400,7 +401,7 @@ bindingIdentifier_s* parseBindingIdentifier(tokenData* tokens) {
             syntaxError();
         }
 
-        bindingIdentifier->typed_t.id = id2;
+        bindingIdentifier->typed_t.id->identifier = id2;
     }
 
     return bindingIdentifier;
@@ -576,27 +577,6 @@ int isNum(char* token) {
         return 1;
     }
 }
-
-// // Returns whether token is a valid representation of a double (assumes token is number)
-// int isDouble(char* token) {
-//     // if (!isNumber(token)) {
-//     //     return 0;
-//     // }
-
-//     int hasDecimal = 0;
-
-//     for (int i = 0; i < strlen(token); i++) {
-//         if (token[i] == '.') {
-//             if (hasDecimal) {
-//                 return 0;
-//             } else {
-//                 hasDecimal = 1;
-//             }
-//         }
-//     }
-
-//     return hasDecimal;
-// }
 
 int isIdentifier(char* token) {
     if (!isNum(token) && !isKeyword(token)) {

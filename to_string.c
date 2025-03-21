@@ -652,7 +652,7 @@ char* characterRepr(character_s* param) {
     int returnLength = strlen("Character: []") + 2;
     char* returnStr = malloc(returnLength);
 
-    snprintf(returnStr, returnLength, "Character: [%c]", param->character);
+    snprintf(returnStr, returnLength, "Character: [%c]", *(param->character));
     return returnStr;
 }
 

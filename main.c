@@ -6,8 +6,9 @@
 #include "to_string.h"
 #include "test_harness.h"
 #include "tokenizer.h"
+#include "parser.h"
 
-int main() {
+int main(int argc, char* argv[]) {
     unitTesting();
 
     return 0;
