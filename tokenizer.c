@@ -6,130 +6,78 @@
 #include "tokenizer.h"
 #include "to_string.h"
 
+int currentIndex = 0;
+
+char* nextToken(char* input) {
+    if (input[currentIndex] == '\0') {
+        return NULL;
+    }
+
+    char* rtrnToken;
+
+    if (isPunctuation(input[currentIndex])) {
+        rtrnToken = malloc(2);
+        rtrnToken[0] = input[currentIndex];
+        rtrnToken[1] = '\0';
+
+        currentIndex++;
+
+        if (input[currentIndex] == ' ') {
+            currentIndex++;
+        }
+
+        return rtrnToken;
+    }
+
+    int counter = 0;
+    int startPoint = currentIndex;
+    while (input[currentIndex] != '\0' && input[currentIndex] != ' ' && !isPunctuation(input[currentIndex])) {
+        counter++;
+        currentIndex++;
+    }
+    currentIndex = startPoint;
+
+    rtrnToken = malloc(counter + 1);
+    for (int i = 0; i < counter; i++) {
+        rtrnToken[i] = input[currentIndex];
+        currentIndex++;
+    }
+    rtrnToken[counter] = '\0';
+
+    if (input[currentIndex] == ' ') {
+        currentIndex++;
+    }
+
+    return rtrnToken;
+}
+
 tokenData* tokenize(char* input) {
     tokenData* result = malloc(sizeof(tokenData));
+    result->index = 0;
+    result->length = 0;
 
     char* str = normalizeWhitespace(input);
-    int length = strlen(str);
-    int tokensFound = 0;
 
-    // Guard statement to handle empty input
     if (!strcmp(str, "")) {
-        result->index = 0;
-        result->length = 0;
         result->tokens = malloc(sizeof(char*));
-
         return result;
     }
 
-    // Count tokens
-    for (int i = 0; i < length; i++) {
-        if (str[i] == ' ' || str[i] == '\0') {
-            tokensFound ++;
-        } else if (isPunctuation(str[i])) {
-            if (i > 0 && str[i - 1] != ' ') {
-                tokensFound ++;
-            }
+    while (nextToken(str) != NULL) {
+        result->length++;
+    }
+    currentIndex = 0;
 
-            if (str[i + 1] != '\0' && str[i + 1] != ' ') {
-                tokensFound ++;
-            }
-        }
+    char** tokenList = malloc(sizeof(char*) * result->length);
+    tokenList[result->length] = '\0';
+
+    char* token;
+    for (int i = 0; (token = nextToken(str)) != NULL; i++) {
+        tokenList[i] = token;
     }
 
-    tokensFound++;
-
-    // Initialize list of tokens
-    char** tokenList = malloc(sizeof(char*) * tokensFound);
-
-    // Populate list of tokens
-    int tokenStart = 0;
-    int currentChar = 0;
-    int tokenCount = 0;
-    while (tokenCount < tokensFound) {
-        int tokenLength = 0;
-        char* token = "";
-
-        while (str[currentChar] != ' ' && str[currentChar] != '\0' && !isPunctuation(str[currentChar])) {
-            tokenLength++;
-            currentChar++;
-        }
-
-        if (isPunctuation(str[currentChar])) {
-            int flag = 0;
-            
-            if (currentChar > 0 && str[currentChar - 1] != ' ') {
-                token = malloc(tokenLength + 1);
-
-                currentChar = tokenStart;
-                while (str[currentChar] != ' ' && str[currentChar] != '\0' && !isPunctuation(str[currentChar])) {
-                    token[currentChar - tokenStart] = str[currentChar];
-                    currentChar++;
-                }
-
-                token[tokenLength] = '\0';
-                tokenList[tokenCount] = token;
-
-                tokenCount++;
-                flag = 1;
-            }
-
-            if (str[currentChar + 1] != '\0' && str[currentChar + 1] != ' ') {
-                tokenLength = 1;
-                token = malloc(tokenLength + 1);
-
-                token[0] = str[currentChar];
-                token[1] = '\0';
-
-                tokenList[tokenCount] = token;
-
-                tokenCount++;
-                flag = 1;
-            }
-
-            currentChar++;
-
-            if (flag) {
-                tokenStart = currentChar;
-            }
-        } else {
-            if (isPunctuation(str[currentChar - 1])) {
-                tokenLength = 1;
-                token = malloc(tokenLength + 1);
-
-                token[0] = str[currentChar - 1];
-                token[1] = '\0';
-
-                tokenList[tokenCount] = token;
-
-                tokenCount++;
-                currentChar++;
-                tokenStart = currentChar;
-                
-                continue;
-            }
-
-            token = malloc(tokenLength + 1);
-
-            currentChar = tokenStart;
-            while (str[currentChar] != ' ' && str[currentChar] != '\0' && !isPunctuation(str[currentChar])) {
-                token[currentChar - tokenStart] = str[currentChar];
-                currentChar++;
-            }
-
-            token[tokenLength] = '\0';
-            tokenList[tokenCount] = token;
-
-            tokenCount++;
-            currentChar++;
-            tokenStart = currentChar;
-        }
-    }
-
-    result->index = 0;
-    result->length = tokenCount;
     result->tokens = tokenList;
-
+    currentIndex = 0;
     return result;
 }
 

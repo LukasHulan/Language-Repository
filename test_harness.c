@@ -68,6 +68,7 @@ int runTests(testData* tests[], int numTests) {
     printf("Running tests: %d\n", numTests);
     
     for (int testCounter = 0; testCounter < numTests; testCounter++) {
+        printf("Running test %i...\n", testCounter + 1);
         testData* current = tests[testCounter];
 
         switch (current->type) {
@@ -256,6 +257,12 @@ void unitTesting() {
     helloWorldToken2->length = 3;
     helloWorldToken2->tokens = tokenArray5;
 
+    char* tokenArray6[] = {"[", "]", ":", "[", "]"};
+    tokenData* punctuationTokens = malloc(sizeof(tokenData));
+    punctuationTokens->index = 0;
+    punctuationTokens->length = 5;
+    punctuationTokens->tokens = tokenArray6;
+
     // Test 1
     testData* reprTest1 = malloc(sizeof(testData));
     reprTest1->type = TEST_REPRESNTATION;
@@ -382,15 +389,21 @@ void unitTesting() {
     tknsTest10->testTknize.str = "Hello world :";
     tknsTest10->testTknize.tkns = helloWorldToken2;
 
+    // Test 22
+    testData* tknsTest11 = malloc(sizeof(testData));
+    tknsTest11->type = TEST_TOKENIZE;
+    tknsTest11->testTknize.str = "[]:[]";
+    tknsTest11->testTknize.tkns = punctuationTokens;
+
     // Compile array of data to test
     testData* tests[] = {
         reprTest1, reprTest2, reprTest3, 
         normTest1, normTest2, normTest3, normTest4, normTest5, normTest6,
         pnctTest1, pnctTest2,
-        tknsTest1, tknsTest2, tknsTest3, tknsTest4, tknsTest5, tknsTest6, tknsTest7, tknsTest8, tknsTest9, tknsTest10
+        tknsTest1, tknsTest2, tknsTest3, tknsTest4, tknsTest5, tknsTest6, tknsTest7, tknsTest8, tknsTest9, tknsTest10, tknsTest11
     };
 
     // Run the tests
     
-    runTests(tests, 21);
+    runTests(tests, 22);
 }

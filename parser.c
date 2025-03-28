@@ -12,11 +12,15 @@ parseTree* parse(tokenData* tokens) {
     parseTree* programTree = malloc(sizeof(parseTree));
     programTree->type = PROGRAM;
     programTree->tree.programValue = parseProgram(tokens);
+
+    return programTree;
 }
 
 program_s* parseProgram(tokenData* tokens) {
     program_s* program = malloc(sizeof(program_s));
     program->stmnts = parseInitialStatements(tokens);
+
+    return program;
 }
 
 multipleStatements_s* parseInitialStatements(tokenData* tokens) {
