@@ -54,6 +54,7 @@ multipleStatements_s* parseMultiStatements(tokenData* tokens) {
 };
 
 statement_s* parseStatement(tokenData* tokens) {
+    // printf("!! %s\n", peekToken(tokens));
     statement_s* stmnt = malloc(sizeof(statement_s));
 
     char* kword = popToken(tokens);
@@ -66,6 +67,7 @@ statement_s* parseStatement(tokenData* tokens) {
         stmnt->define_t.bid = parseBindingIdentifier(tokens);
 
         if (strcmp(popToken(tokens), ":")) {
+            // printf("1\n");
             syntaxError();
         }
 
@@ -76,12 +78,15 @@ statement_s* parseStatement(tokenData* tokens) {
         char* id = popToken(tokens);
 
         if (!isIdentifier(id)) {
+            // printf("2\n");
             syntaxError();
         }
 
+        stmnt->execute_t.id = malloc(sizeof(identifier_s));
         stmnt->execute_t.id->identifier = id;
 
         if (strcmp(popToken(tokens), ":")) {
+            // printf("3\n");
             syntaxError();
         }
 
@@ -97,6 +102,7 @@ statement_s* parseStatement(tokenData* tokens) {
         stmnt->while_t.expr = parseExpression(tokens);
 
         if (strcmp(popToken(tokens), ":")) {
+            // printf("4\n");
             syntaxError();
         }
 
@@ -105,6 +111,7 @@ statement_s* parseStatement(tokenData* tokens) {
         stmnt->tag = PASS;
         stmnt->pass_t.placeholder = 1;
     } else {
+        // printf("5\n");
         syntaxError();
     }
 
@@ -117,6 +124,7 @@ if_s* parseIf(tokenData* tokens) {
     ifStmnt->if_only_t.ifExpr = parseExpression(tokens);
 
     if (strcmp(popToken(tokens), ":")) {
+        // printf("6\n");
         syntaxError();
     }
 
@@ -126,7 +134,7 @@ if_s* parseIf(tokenData* tokens) {
         expression_s* ifExpr = ifStmnt->if_only_t.ifExpr;
         statement_s* ifstmnts = ifStmnt->if_only_t.ifStmnt;
 
-        if (!strcmp(getToken(tokens, tokens->index + 1), ":")) {
+        if ((tokens->index + 1) < tokens->length && !strcmp(getToken(tokens, tokens->index + 1), ":")) {
             ifStmnt->tag = IF_ELSE;
             ifStmnt->if_else_t.ifExpr = ifExpr;
             ifStmnt->if_else_t.ifStmnt = ifstmnts;
@@ -135,7 +143,7 @@ if_s* parseIf(tokenData* tokens) {
             popToken(tokens);
 
             ifStmnt->if_else_t.elseStmnt = parseStatement(tokens);
-        } else if (!strcmp(getToken(tokens, tokens->index + 1), "if")) {
+        } else if ((tokens->index + 1) < tokens->length && !strcmp(getToken(tokens, tokens->index + 1), "if")) {
             popToken(tokens);
             popToken(tokens);
 
@@ -152,6 +160,7 @@ if_s* parseIf(tokenData* tokens) {
                     ifStmnt->if_elseif_else_t.chain = elseIfChain;
                     ifStmnt->if_elseif_else_t.elseStmnt = parseStatement(tokens);
                 } else {
+                    // printf("7\n");
                     syntaxError();
                 }
             } else {
@@ -161,6 +170,7 @@ if_s* parseIf(tokenData* tokens) {
                 ifStmnt->if_elseif_else_t.chain = elseIfChain;
             }
         } else {
+            // printf("8\n");
             syntaxError();
         }
     }
@@ -174,6 +184,7 @@ elseIfChain_s* parseElseIfChain(tokenData* tokens) {
     expression_s* elseIfExpr = parseExpression(tokens);
 
     if (strcmp(popToken(tokens), ":")) {
+        // printf("9\n");
         syntaxError();
     }
 
@@ -184,6 +195,8 @@ elseIfChain_s* parseElseIfChain(tokenData* tokens) {
     elseIfChain->single_t.ifStmnt = elseIfStmnt;
 
     if (!strcmp(peekToken(tokens), "else")) {
+        tokens->index++;
+        // printf("! %s\n", peekToken(tokens));
         if (!strcmp(peekToken(tokens), "if")) {
             elseIfChain->tag = MULTI;
             elseIfChain->multi_t.ifExpr = elseIfExpr;
@@ -194,8 +207,10 @@ elseIfChain_s* parseElseIfChain(tokenData* tokens) {
 
             elseIfChain->multi_t.chain = parseElseIfChain(tokens);
         } else if (!strcmp(peekToken(tokens), ":")) {
+            tokens->index++;
             return elseIfChain;
         } else {
+            // printf("10\n");
             syntaxError();
         }
     }
@@ -204,6 +219,7 @@ elseIfChain_s* parseElseIfChain(tokenData* tokens) {
 }
 
 expression_s* parseExpression(tokenData* tokens) {
+    // printf(": %s\n", peekToken(tokens));
     expression_s* expression = malloc(sizeof(expression_s));
 
     char* token = popToken(tokens);
@@ -213,6 +229,7 @@ expression_s* parseExpression(tokenData* tokens) {
         expression->parentheses_t.expr = parseExpression(tokens);
 
         if (strcmp(popToken(tokens), ")")) {
+            // printf("11\n");
             syntaxError();
         }
     } else if (!strcmp(token, "'")) {
@@ -221,12 +238,14 @@ expression_s* parseExpression(tokenData* tokens) {
         char* character = popToken(tokens);
 
         if (strlen(character) != 1) {
+            // printf("12\n");
             syntaxError();
         }
 
         expression->character_t.chr->character = character;
 
         if (strcmp(popToken(tokens), "'")) {
+            // printf("13\n");
             syntaxError();
         }
     } else if (!strcmp(token, "[")) {
@@ -238,16 +257,20 @@ expression_s* parseExpression(tokenData* tokens) {
         char* id = popToken(tokens);
 
         if (!isIdentifier(id)) {
+            // printf("14\n");
             syntaxError();
         }
 
+        expression->evaluate_t.id = malloc(sizeof(identifier_s));
         expression->evaluate_t.id->identifier = id;
 
         if (strcmp(popToken(tokens), ":")) {
+            // printf("15\n");
             syntaxError();
         }
 
         if (strcmp(popToken(tokens), "[")) {
+            // printf("16\n");
             syntaxError();
         }
 
@@ -260,10 +283,13 @@ expression_s* parseExpression(tokenData* tokens) {
         expression->identifier_t.id = malloc(sizeof(identifier_s));
         expression->identifier_t.id->identifier = token;
     } else if (isNum(token)) {
+        // printf("Got here 9\n");
         expression->tag = NUMERIC;
         expression->numeric_t.num = malloc(sizeof(numeric_s));
         expression->numeric_t.num->tag = NUMBER;
+        tokens->index--;
         expression->numeric_t.num->number_t.num = parseNumberData(tokens);
+        tokens->index++;
     } else if (!strcmp(token, "true")) {
         expression->tag = BOOLEAN;
         expression->boolean_t.bool = malloc(sizeof(boolean_s));
@@ -280,12 +306,14 @@ expression_s* parseExpression(tokenData* tokens) {
         expression->boolean_t.bool->tag = NOT;
         expression->boolean_t.bool->not_t.expr = parseExpression(tokens);
     } else {
+        // printf("17: %s\n", peekToken(tokens));
         syntaxError();
     }
 
     char* next = peekToken(tokens);
 
     if (!strcmp(next, "+")) {
+        // printf("Got here 1\n");
         popToken(tokens);
 
         expression_s* expr1 = malloc(sizeof(expression_s));
@@ -351,9 +379,9 @@ expression_s* parseExpression(tokenData* tokens) {
         expression_s* expr1 = malloc(sizeof(expression_s));
         expr1->tag = BOOLEAN;
         expr1->boolean_t.bool = malloc(sizeof(boolean_s));
-        expression->boolean_t.bool->tag = EQUALS;
-        expression->boolean_t.bool->equals_t.expr1 = expression;
-        expression->boolean_t.bool->equals_t.expr2 = parseExpression(tokens);
+        expr1->boolean_t.bool->tag = EQUALS;
+        expr1->boolean_t.bool->equals_t.expr1 = expression;
+        expr1->boolean_t.bool->equals_t.expr2 = parseExpression(tokens);
 
         return expr1;
     } else if (!strcmp(next, "&")) {
@@ -362,9 +390,9 @@ expression_s* parseExpression(tokenData* tokens) {
         expression_s* expr1 = malloc(sizeof(expression_s));
         expr1->tag = BOOLEAN;
         expr1->boolean_t.bool = malloc(sizeof(boolean_s));
-        expression->boolean_t.bool->tag = AND;
-        expression->boolean_t.bool->and_t.expr1 = expression;
-        expression->boolean_t.bool->and_t.expr2 = parseExpression(tokens);
+        expr1->boolean_t.bool->tag = AND;
+        expr1->boolean_t.bool->and_t.expr1 = expression;
+        expr1->boolean_t.bool->and_t.expr2 = parseExpression(tokens);
 
         return expr1;
     } else if (!strcmp(next, "|")) {
@@ -373,9 +401,9 @@ expression_s* parseExpression(tokenData* tokens) {
         expression_s* expr1 = malloc(sizeof(expression_s));
         expr1->tag = BOOLEAN;
         expr1->boolean_t.bool = malloc(sizeof(boolean_s));
-        expression->boolean_t.bool->tag = OR;
-        expression->boolean_t.bool->or_t.expr1 = expression;
-        expression->boolean_t.bool->or_t.expr2 = parseExpression(tokens);
+        expr1->boolean_t.bool->tag = OR;
+        expr1->boolean_t.bool->or_t.expr1 = expression;
+        expr1->boolean_t.bool->or_t.expr2 = parseExpression(tokens);
 
         return expr1;
     }
@@ -394,17 +422,21 @@ bindingIdentifier_s* parseBindingIdentifier(tokenData* tokens) {
 
     if (!isIdentifier(peekToken(tokens))) {
         bindingIdentifier->tag = NOT_TYPED;
+        bindingIdentifier->not_typed_t.id = malloc(sizeof(identifier_s));
         bindingIdentifier->not_typed_t.id->identifier = id1;
     } else {
         bindingIdentifier->tag = TYPED;
+        bindingIdentifier->typed_t.type = malloc(sizeof(identifier_s));
         bindingIdentifier->typed_t.type->identifier = id1;
 
         char* id2 = popToken(tokens);
 
         if (!isIdentifier(id2)) {
+            // printf("19\n");
             syntaxError();
         }
 
+        bindingIdentifier->typed_t.id = malloc(sizeof(identifier_s));
         bindingIdentifier->typed_t.id->identifier = id2;
     }
 
@@ -433,13 +465,16 @@ multipleExpressions_s* parseMultiExpressions(tokenData* tokens) {
     expression_s* expr = parseExpression(tokens);
 
     if (!strcmp(peekToken(tokens), "]")) {
+        // tokens->index++;
         multiExprs->tag = SINGLE;
         multiExprs->single_t.expr = expr;
     } else if (!strcmp(peekToken(tokens), ",")) {
+        tokens->index++;
         multiExprs->tag = MULTI;
         multiExprs->multi_t.first = expr;
         multiExprs->multi_t.rest = parseMultiExpressions(tokens);
     } else {
+        // printf("20\n");
         syntaxError();
     }
 
@@ -456,6 +491,7 @@ functionDeclaration_s* parseFunctionDeclaration(tokenData* tokens) {
         func->not_typed_t.list = parseList(tokens);
 
         if (strcmp(peekToken(tokens), ":")) {
+            // printf("21\n");
             syntaxError();
         }
 
@@ -468,6 +504,7 @@ functionDeclaration_s* parseFunctionDeclaration(tokenData* tokens) {
         func->typed_t.id->identifier = token;
 
         if (strcmp(peekToken(tokens), "[")) {
+            // printf("22\n");
             syntaxError();
         }
 
@@ -476,6 +513,7 @@ functionDeclaration_s* parseFunctionDeclaration(tokenData* tokens) {
         func->typed_t.list = parseList(tokens);
 
         if (strcmp(peekToken(tokens), ":")) {
+            // printf("23: %s\n", peekToken(tokens));
             syntaxError();
         }
 
@@ -483,6 +521,7 @@ functionDeclaration_s* parseFunctionDeclaration(tokenData* tokens) {
 
         func->typed_t.stmnt = parseStatement(tokens);
     } else {
+        printf("24\n");
         syntaxError();
     }
 
@@ -490,6 +529,7 @@ functionDeclaration_s* parseFunctionDeclaration(tokenData* tokens) {
 }
 
 numberData_s* parseNumberData(tokenData* tokens) {  
+    // printf("Got here 10 %s\n", peekToken(tokens));
     numberData_s* num = malloc(sizeof(numberData_s));
 
     char* token = peekToken(tokens);
@@ -498,10 +538,12 @@ numberData_s* parseNumberData(tokenData* tokens) {
     if (type == 1) {
         num->type = INT;
         num->integer = atoi(token);
+        // printf("! %d\n", atoi(token));
     } else if (type == -1) {
         num->type = DOUBLE;
         num->decimal = atof(token);
     } else {
+        printf("25\n");
         syntaxError();
     }
 
@@ -554,6 +596,7 @@ int isKeyword(char* token) {
 
 // Returns 1 if int, -1 if double, or 0 if invalid
 int isNum(char* token) {
+    // printf("%s\n", token);
     int hasSign = 0;
     int hasDecimal = 0;
 
@@ -564,22 +607,21 @@ int isNum(char* token) {
     for (int i = hasSign; i < strlen(token); i++) {
         if (token[i] == '.') {
             if (hasDecimal) {
+                // printf("!\n");
                 return 0;
             } else {
                 hasDecimal = 1;
             }
         } else {
             if (!isdigit(token[i])) {
+                // printf("?\n");
                 return 0;
             }
         }
     }
 
-    if (hasDecimal) {
-        return -1;
-    } else {
-        return 1;
-    }
+    // printf(".\n");
+    return (hasDecimal) ? -1 : 1;
 }
 
 int isIdentifier(char* token) {

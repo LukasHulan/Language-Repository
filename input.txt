@@ -1,1 +1,13 @@
-if true: pass
+define x : 5
+define y : 5
+if (x + y) = 10 : pass
+else if (x + y) = 5 : define z : x + y
+else : {
+	pass 
+	pass 
+	pass
+}
+def z : fnc number? [a, b] : {
+	define c : 15
+	rtn c
+}

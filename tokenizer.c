@@ -108,14 +108,14 @@ char* getToken(tokenData* tknData, int target) {
 
 // Returns a copy of the current token
 char* peekToken(tokenData* tknData) {
-    char* token = getToken(tknData, tknData->index);
+    char* token = (tknData->index < tknData->length) ? getToken(tknData, tknData->index) : "\0";
 
     return token;
 }
 
 // Returns a copy of the current token and moves the token index
 char* popToken(tokenData* tknData) {
-    if (tknData->index == tknData->length) {
+    if (tknData->index >= tknData->length) {
         return "\0";
     }
 

@@ -6,7 +6,7 @@
 #include "to_string.h"
 
 int isPunctuation(char c) {
-    char* punctuation = ":<>()[]{}+-*/%%!=&|";
+    char* punctuation = ":<>()[]{}+-*/%%!=&|,";
 
     return ((strchr(punctuation, c) != NULL) && c != '\0');
 }
@@ -224,7 +224,7 @@ char* ifRepr(if_s* param) {
     char* returnStr;
 
     if (param->tag == IF_ONLY) {
-        tagName = "if_only";
+        tagName = "if only";
 
         char* exprStr = expressionRepr(param->if_only_t.ifExpr);
         char* stmntStr = statementRepr(param->if_only_t.ifStmnt);
@@ -234,7 +234,7 @@ char* ifRepr(if_s* param) {
 
         snprintf(returnStr, returnLength, "If(%s): [%s, %s]", tagName, exprStr, stmntStr);
     } else if (param->tag == IF_ELSE) {
-        tagName = "if_else";
+        tagName = "if else";
 
         char* ifExprStr = expressionRepr(param->if_else_t.ifExpr);
         char* ifStmntStr = statementRepr(param->if_else_t.ifStmnt);
@@ -246,7 +246,7 @@ char* ifRepr(if_s* param) {
 
         snprintf(returnStr, returnLength, "If(%s): [%s, %s, %s]", tagName, ifExprStr, ifStmntStr, elseStmntStr);
     } else if (param->tag == IF_ELSEIF) {
-        tagName = "if_elseif";
+        tagName = "if elseif";
 
         char* ifExprStr = expressionRepr(param->if_elseif_t.ifExpr);
         char* ifStmntStr = statementRepr(param->if_elseif_t.ifStmnt);
@@ -258,7 +258,7 @@ char* ifRepr(if_s* param) {
 
         snprintf(returnStr, returnLength, "If(%s): [%s, %s, %s]", tagName, ifExprStr, ifStmntStr, chainStr);
     } else if (param->tag == IF_ELSEIF_ELSE) {
-        tagName = "if_elseif_else";
+        tagName = "if elseif else";
 
         char* ifExprStr = expressionRepr(param->if_elseif_t.ifExpr);
         char* ifStmntStr = statementRepr(param->if_elseif_t.ifStmnt);
@@ -437,7 +437,7 @@ char* numericRepr(numeric_s* param) {
                 opStr = "Error: invalid or unset operator";
         };
 
-        returnLength = strlen("NumericOperator(): [, ]") + strlen(tagName) + strlen(num1Str) + strlen(num2Str) + strlen(opStr) + 1;
+        returnLength = strlen("NumericOperator(): [, ]") + strlen(tagName) + strlen(num1Str) + strlen(num2Str) + strlen(opStr) + 2;
         returnStr = malloc(returnLength);
 
         snprintf(returnStr, returnLength, "NumericOperator(%s): [%s, %s, %s]", tagName, num1Str, num2Str, opStr);

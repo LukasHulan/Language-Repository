@@ -35,44 +35,55 @@ int main(int argc, char* argv[]) {
         unitTesting();
     }
 
-    if (toDebug) {
-        if (givenFile) {
-            FILE* file;
-            if ((file = fopen(fileName, "r")) != NULL) {
-                fseek(file, 0L, SEEK_END);
-                long length = ftell(file);
-                rewind(file);
+    if (givenFile) {
+        FILE* file;
+        if ((file = fopen(fileName, "rb")) != NULL) {
+            fseek(file, 0L, SEEK_END);
+            long length = ftell(file);
+            rewind(file);
 
-                char* buffer = malloc(length + 1);
-                buffer[length] = '\0';
+            char* buffer = malloc(length + 1);
 
-                if (buffer) {
-                    fread(buffer, 1, length, file);
-                }
+            if (buffer) {
+                fread(buffer, 1, length, file);
+            }
+            buffer[length] = '\0';
 
-                fclose(file);
+            fclose(file);
 
-                if (buffer) {
-                    printf("Tokenizing...\n");
-                    tokenData* tkns = tokenize(buffer);
+            if (buffer) {
+                if (toDebug) printf("Tokenizing...\n");
+                tokenData* tkns = tokenize(buffer);
+                
+                free(buffer);
 
+                if (toDebug) {
                     printf("Tokens: ");
                     for (int i = 0; i < tkns->length; i++) {
                         printf("\"%s\" ", tkns->tokens[i]);
                     }
                     printf("\n");
+                }
 
-                    printf("Parsing...\n");
-                    parseTree* pt = parse(tkns);
+                if (toDebug) printf("Parsing...\n");
+                parseTree* pt = parse(tkns);
 
+                for (int i = 0; i < tkns->length; i++) {
+                    free(tkns->tokens[i]);
+                }
+                free(tkns);
+
+                if (toDebug) {
                     printf("Representation:\n");
                     printf("%s\n", parseTreeRepr(pt));
                 }
             } else {
-                printf("Could not find a file named \"%s\".\n", fileName);
+                printf("Could not read file.");
             }
         } else {
-            printf("No file provided.\n");
+            printf("Could not find a file named \"%s\".\n", fileName);
         }
+    } else {
+        printf("No file provided.\n");
     }
 }
