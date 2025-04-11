@@ -7,6 +7,9 @@
 #include "test_harness.h"
 #include "tokenizer.h"
 #include "parser.h"
+#include "executor.h"
+
+scopeFrame* topScope;
 
 int main(int argc, char* argv[]) {
     int toTest = 0;
@@ -77,6 +80,10 @@ int main(int argc, char* argv[]) {
                     printf("Representation:\n");
                     printf("%s\n", parseTreeRepr(pt));
                 }
+
+                topScope = initialScope();
+
+                execute(pt);
             } else {
                 printf("Could not read file.");
             }

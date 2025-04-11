@@ -299,6 +299,7 @@ typedef struct functionDeclaration_s {
     };
 } functionDeclaration_s;
 
+// Tags: TYPED, NOT_TYPED
 typedef struct bindingIdentifier_s {
     enum tags tag;
     union {

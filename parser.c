@@ -83,7 +83,7 @@ statement_s* parseStatement(tokenData* tokens) {
         }
 
         stmnt->execute_t.id = malloc(sizeof(identifier_s));
-        stmnt->execute_t.id->identifier = id;
+        strncpy(stmnt->execute_t.id->identifier, id, strlen(id));
 
         if (strcmp(popToken(tokens), ":")) {
             // printf("3\n");
@@ -262,7 +262,7 @@ expression_s* parseExpression(tokenData* tokens) {
         }
 
         expression->evaluate_t.id = malloc(sizeof(identifier_s));
-        expression->evaluate_t.id->identifier = id;
+        strncpy(expression->evaluate_t.id->identifier, id, strlen(id));
 
         if (strcmp(popToken(tokens), ":")) {
             // printf("15\n");
@@ -281,7 +281,7 @@ expression_s* parseExpression(tokenData* tokens) {
     } else if (isIdentifier(token)) {
         expression->tag = IDENTIFIER;
         expression->identifier_t.id = malloc(sizeof(identifier_s));
-        expression->identifier_t.id->identifier = token;
+        strncpy(expression->identifier_t.id->identifier, token, strlen(token));
     } else if (isNum(token)) {
         // printf("Got here 9\n");
         expression->tag = NUMERIC;
@@ -423,11 +423,11 @@ bindingIdentifier_s* parseBindingIdentifier(tokenData* tokens) {
     if (!isIdentifier(peekToken(tokens))) {
         bindingIdentifier->tag = NOT_TYPED;
         bindingIdentifier->not_typed_t.id = malloc(sizeof(identifier_s));
-        bindingIdentifier->not_typed_t.id->identifier = id1;
+        strncpy(bindingIdentifier->not_typed_t.id->identifier, id1, strlen(id1));
     } else {
         bindingIdentifier->tag = TYPED;
         bindingIdentifier->typed_t.type = malloc(sizeof(identifier_s));
-        bindingIdentifier->typed_t.type->identifier = id1;
+        strncpy(bindingIdentifier->typed_t.type->identifier, id1, strlen(id1));
 
         char* id2 = popToken(tokens);
 
@@ -437,7 +437,7 @@ bindingIdentifier_s* parseBindingIdentifier(tokenData* tokens) {
         }
 
         bindingIdentifier->typed_t.id = malloc(sizeof(identifier_s));
-        bindingIdentifier->typed_t.id->identifier = id2;
+        strncpy(bindingIdentifier->typed_t.id->identifier, id2, strlen(id2));
     }
 
     return bindingIdentifier;
@@ -501,7 +501,7 @@ functionDeclaration_s* parseFunctionDeclaration(tokenData* tokens) {
     } else if (isIdentifier(token)) {
         func->tag = TYPED;
         func->typed_t.id = malloc(sizeof(identifier_s));
-        func->typed_t.id->identifier = token;
+        strncpy(func->typed_t.id->identifier, token, strlen(token));
 
         if (strcmp(peekToken(tokens), "[")) {
             // printf("22\n");
