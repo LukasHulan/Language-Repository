@@ -384,6 +384,28 @@ expression_s* parseExpression(tokenData* tokens) {
         expr1->boolean_t.bool->equals_t.expr2 = parseExpression(tokens);
 
         return expr1;
+    } else if (!strcmp(next, "<")) {
+        popToken(tokens);
+
+        expression_s* expr1 = malloc(sizeof(expression_s));
+        expr1->tag = BOOLEAN;
+        expr1->boolean_t.bool = malloc(sizeof(boolean_s));
+        expr1->boolean_t.bool->tag = LESS;
+        expr1->boolean_t.bool->equals_t.expr1 = expression;
+        expr1->boolean_t.bool->equals_t.expr2 = parseExpression(tokens);
+
+        return expr1;
+    } else if (!strcmp(next, ">")) {
+        popToken(tokens);
+
+        expression_s* expr1 = malloc(sizeof(expression_s));
+        expr1->tag = BOOLEAN;
+        expr1->boolean_t.bool = malloc(sizeof(boolean_s));
+        expr1->boolean_t.bool->tag = GREATER;
+        expr1->boolean_t.bool->equals_t.expr1 = expression;
+        expr1->boolean_t.bool->equals_t.expr2 = parseExpression(tokens);
+
+        return expr1;
     } else if (!strcmp(next, "&")) {
         popToken(tokens);
 

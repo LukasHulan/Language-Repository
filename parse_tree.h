@@ -38,6 +38,8 @@ enum tags {
     OR,
     AND,
     EQUALS,
+    GREATER,
+    LESS,
     EMPTY,
     NOT_EMPTY,
     NUMBER_DATA,
@@ -51,6 +53,7 @@ enum tags {
     BINDING_IDENTIFIER,
     TYPED,
     NOT_TYPED,
+    NONE
 };
 
 // Tags: INT, DOUBLE
@@ -221,7 +224,7 @@ typedef struct numeric_s {
     }; 
 } numeric_s;
 
-// Tags: TRUE, FALSE, NOT, OR, AND, EQUALS
+// Tags: TRUE, FALSE, NOT, OR, AND, EQUALS, GREATER, LESS
 typedef struct boolean_s {
     enum tags tag;
     union {
@@ -268,6 +271,7 @@ typedef struct list_s {
     };
 } list_s;
 
+// Tags: SINGLE, MULTI
 typedef struct multipleExpressions_s {
     enum tags tag;
     union {

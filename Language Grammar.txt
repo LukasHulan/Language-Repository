@@ -56,6 +56,8 @@ Any whitespace in this grammar could be either a space or a newline
 	false
 	!<expression>
 	<expression> = <expression>
+	<expression> < <expression>
+	<expression> > <expression>
 	<expression> | <expression>
 	<expression> & <expression>
 
